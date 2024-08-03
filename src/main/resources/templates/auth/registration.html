@@ -42,17 +42,17 @@
 <body>
 <div class="form-container">
     <h2 class="text-center mb-4">Registration</h2>
-    <form action="/registration" method="post">
+    <form th:method="POST" th:action="@{/registration}" method="post" th:object="${user}">
         <div class="mb-3">
             <label for="login" class="form-label">Login</label>
-            <input type="text" class="form-control" id="login" name="login" required>
+            <input type="text" th:field="*{login}" class="form-control" id="login" name="login" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" th:field="*{password}" class="form-control" id="password" name="password" required>
         </div>
         <div class="d-grid gap-2">
-            <input type="submit" class="btn btn-cute" name="button" value="registration">
+            <input type="submit" class="btn btn-cute" name="button" value="registration"/>
         </div>
     </form>
     <form action="/login" method="get" class="mt-3">
