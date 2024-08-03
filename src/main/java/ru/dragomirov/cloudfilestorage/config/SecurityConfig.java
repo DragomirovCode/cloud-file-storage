@@ -8,17 +8,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Настройка правил авторизации запросов
         http.authorizeRequests()
-                .antMatchers("/sign-in").permitAll()
+                .antMatchers("/login", "/registration").permitAll()
                 .anyRequest().hasAnyRole("user")
                 .and()
                 .formLogin()
                 // Страница, на которую пользователь будет перенаправлен для входа
-                .loginPage("/sign-in")
+                .loginPage("/login")
                 // URL, на который отправляются данные формы авторизации (исправьте на /process_login, если это ошибка)
                 .loginProcessingUrl("/precess_login")
                 .defaultSuccessUrl("/", true)
