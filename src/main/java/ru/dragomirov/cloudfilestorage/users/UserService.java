@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.entity.user;
+package ru.dragomirov.cloudfilestorage.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

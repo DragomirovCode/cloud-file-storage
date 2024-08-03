@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.entity.user;
+package ru.dragomirov.cloudfilestorage.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

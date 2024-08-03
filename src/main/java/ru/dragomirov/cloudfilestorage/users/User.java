@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.entity.user;
+package ru.dragomirov.cloudfilestorage.users;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
