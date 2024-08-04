@@ -19,12 +19,12 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String doGet(@ModelAttribute("user") User user){
         return "auth/registration";
     }
 
-    @PostMapping()
+    @PostMapping
     public String doPost(@ModelAttribute("user") User user) {
         userService.save(user);
         return "redirect:/auth/login";
