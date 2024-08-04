@@ -1,6 +1,5 @@
 package ru.dragomirov.cloudfilestorage.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,16 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final UserDetailsService myUserDetailsService;
 
-    @Autowired
-    public SecurityConfig(UserDetailsService myUserDetailsService) {
-        this.myUserDetailsService = myUserDetailsService;
+    public SecurityConfig(UserDetailsService MyUserDetailsService) {
+        this.myUserDetailsService = MyUserDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/registration").permitAll()
+                        .requestMatchers("registration").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -50,6 +48,7 @@ public class SecurityConfig {
 
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(myUserDetailsService);
+
         return provider;
     }
 }
