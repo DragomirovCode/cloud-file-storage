@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.users;
+package ru.dragomirov.cloudfilestorage.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

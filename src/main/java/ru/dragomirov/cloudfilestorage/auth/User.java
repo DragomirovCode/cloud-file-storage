@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.users;
+package ru.dragomirov.cloudfilestorage.auth;
 
 import jakarta.persistence.*;
 import lombok.Getter;
