@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
@@ -44,20 +44,20 @@
     <h2 class="text-center mb-4">Registration</h2>
     <form th:method="POST" th:action="@{/registration}" method="post" th:object="${user}">
         <div class="mb-3">
-            <label for="login" class="form-label">Login</label>
-            <input type="text" th:field="*{login}" class="form-control" id="login" name="login" required>
+            <label for="username" class="form-label">Login</label>
+            <input type="text" th:field="*{username}" class="form-control" id="username" name="username" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" th:field="*{password}" class="form-control" id="password" name="password" required>
         </div>
         <div class="d-grid gap-2">
-            <input type="submit" class="btn btn-cute" name="button" value="registration"/>
+            <input type="submit" class="btn btn-cute" value="registration"/>
         </div>
     </form>
-    <form action="/login" method="get" class="mt-3">
+    <form th:action="@{/login}" th:method="GET" class="mt-3">
         <div class="d-grid gap-2">
-            <input type="submit" class="btn btn-secondary" name="button" value="login">
+            <input type="submit" class="btn btn-secondary" value="login">
         </div>
     </form>
 </div>
