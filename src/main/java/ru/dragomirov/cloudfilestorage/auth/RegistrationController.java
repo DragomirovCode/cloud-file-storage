@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.dragomirov.cloudfilestorage.users.User;
-import ru.dragomirov.cloudfilestorage.users.UserService;
 
 @Controller
 @RequestMapping("/registration")
