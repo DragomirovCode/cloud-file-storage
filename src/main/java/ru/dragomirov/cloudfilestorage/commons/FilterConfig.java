@@ -1,9 +1,8 @@
-package ru.dragomirov.cloudfilestorage.config;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.dragomirov.cloudfilestorage.auth.SessionTimeoutFilter;
 
 @Configuration
 public class FilterConfig {

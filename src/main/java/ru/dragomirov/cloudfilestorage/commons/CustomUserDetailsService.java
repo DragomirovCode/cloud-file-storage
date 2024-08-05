@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.config;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

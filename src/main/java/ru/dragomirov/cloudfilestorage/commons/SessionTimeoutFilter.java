@@ -1,6 +1,7 @@
-package ru.dragomirov.cloudfilestorage.auth;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import jakarta.servlet.*;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

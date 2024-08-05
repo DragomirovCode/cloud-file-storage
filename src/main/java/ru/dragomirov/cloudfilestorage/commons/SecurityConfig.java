@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.config;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
