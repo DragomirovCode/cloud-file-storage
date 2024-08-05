@@ -18,7 +18,7 @@ public class SessionTimeoutFilter implements Filter {
         HttpSession session = httpRequest.getSession(false);
 
         if (session != null) {
-            session.setMaxInactiveInterval(10);
+            session.setMaxInactiveInterval(24 * 60 * 60);
         }
 
         chain.doFilter(request, response);
