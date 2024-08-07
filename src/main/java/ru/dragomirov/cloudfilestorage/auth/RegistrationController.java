@@ -25,6 +25,6 @@ public class RegistrationController {
     @PostMapping
     public String doPost(@ModelAttribute("user") User user) {
         userService.save(user);
-        return "redirect:/auth/login";
+        return "redirect:/login";
     }
 }
