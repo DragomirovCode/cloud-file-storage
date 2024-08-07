@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.commons.config;
+package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;
