@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        label {
+            display: block;
+            font-size: 1rem;
+            font-family: 'Fira Sans', sans-serif;
+        }
+
+        input,
+        label {
+            margin: 0.4rem 0;
+        }
+    </style>
 </head>
 <body>
-
+<form enctype="multipart/form-data" action="/upload" method="POST">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <label for="file">Выберите файл:</label>
+    <input accept="*" name="file" type="file" id="file" required>
+    <input type="submit" value="Отправить файл">
+</form>
 </body>
 </html>
