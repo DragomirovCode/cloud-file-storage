@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Controller
 public class FileUploadController {
-
     private final MinioService minioService;
 
     @Autowired
@@ -22,9 +21,8 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
-        String bucketName = "asiatrip";
+        String bucketName = "home";
 
-        // Генерируем уникальное имя для файла
         String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         try (InputStream fileStream = file.getInputStream()) {
