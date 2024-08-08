@@ -9,7 +9,6 @@ import java.io.InputStream;
 
 @Service
 public class MinioService {
-
     private final MinioClient minioClient;
 
     @Autowired
