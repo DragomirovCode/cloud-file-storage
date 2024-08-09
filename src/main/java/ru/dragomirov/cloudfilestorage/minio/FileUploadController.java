@@ -22,8 +22,8 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
-        String bucketName = "home";
+    public String uploadFile(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
+                             @RequestParam(name = "file") MultipartFile file, Model model) {
 
         String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
@@ -39,7 +39,7 @@ public class FileUploadController {
     }
 
     @GetMapping("/")
-    public String getListObjects(@RequestParam("bucketName") String bucketName, Model model) {
+    public String getListObjects(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName, Model model) {
         try {
             List<String> objectNames = minioService.listObjects(bucketName).stream()
                     .map(item -> item.objectName())
