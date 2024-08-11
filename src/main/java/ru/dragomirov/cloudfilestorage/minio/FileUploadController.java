@@ -20,19 +20,22 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
-                             @RequestParam(name = "file") MultipartFile file, Model model) {
+    public String uploadFiles(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
+                              @RequestParam(name = "files") MultipartFile[] files, Model model) {
 
-        String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        for (MultipartFile file : files) {
+            String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-        try (InputStream fileStream = file.getInputStream()) {
-            minioService.uploadFile(bucketName, uniqueFileName, fileStream);
-            model.addAttribute("message", "Файл успешно загружен как " + uniqueFileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Ошибка загрузки файла: " + e.getMessage());
+            try (InputStream fileStream = file.getInputStream()) {
+                minioService.uploadFile(bucketName, uniqueFileName, fileStream);
+                model.addAttribute("message", "Файл " + uniqueFileName + " успешно загружен.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                model.addAttribute("message", "Ошибка загрузки файла " + file.getOriginalFilename() + ": " + e.getMessage());
+            }
         }
 
         return "redirect:/";
     }
 }
+
