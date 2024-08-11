@@ -16,6 +16,22 @@
         label {
             margin: 0.4rem 0;
         }
+        .delete-button {
+            border: none;
+            background-color: #ff6b6b; /* Красный цвет кнопки */
+            color: white; /* Цвет текста на кнопке */
+            padding: 5px 10px; /* Отступы внутри кнопки */
+            border-radius: 3px; /* Скругление углов */
+            cursor: pointer;
+            font-size: 0.9rem; /* Размер шрифта */
+            transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+            margin-left: 10px; /* Отступ между кнопкой и предыдущим элементом (текстом) */
+        }
+
+        .delete-button:hover {
+            background-color: #ff4757; /* Цвет кнопки при наведении */
+        }
+
     </style>
 </head>
 <body>
@@ -35,15 +51,17 @@
     <tbody>
     <tr th:each="objectName : ${objects}">
         <td th:text="${objectName}"></td>
-        <form action="/delete-file" method="POST" style="display:inline;">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <input type="hidden" name="_method" value="DELETE"/>
-            <input type="hidden" name="bucketName" th:value="${bucketName}"/>
-            <input type="hidden" name="objectName" th:value="${objectName}"/>
-            <button type="submit" class="delete-button">
-                delete<i class="fa-solid fa-trash"></i>
-            </button>
-        </form>
+        <td>
+            <form action="/delete-file" method="POST" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="_method" value="DELETE"/>
+                <input type="hidden" name="bucketName" th:value="${bucketName}"/>
+                <input type="hidden" name="objectName" th:value="${objectName}"/>
+                <button type="submit" class="delete-button">
+                    delete <i class="fa-solid fa-trash"></i>
+                </button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
