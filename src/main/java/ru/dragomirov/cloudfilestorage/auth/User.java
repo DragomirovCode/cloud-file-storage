@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,17 +17,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", unique = true)
-    private String username;
-
-    @Column(name = "password")
+    private String name;
+    private String userName;
     private String password;
+    private String passwordConfirmation;
+    private Set<Role> role;
 
-    @Column(name = "role")
-    private String role;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }
