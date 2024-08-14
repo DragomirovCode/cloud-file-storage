@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.UUID;
 
 @Controller
 public class FileUploadController {
@@ -24,17 +23,17 @@ public class FileUploadController {
                               @RequestParam(name = "files") MultipartFile[] files, Model model) {
 
         for (MultipartFile file : files) {
-            String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            try {
+                InputStream fileStream = file.getInputStream();
 
-            try (InputStream fileStream = file.getInputStream()) {
-                minioService.uploadFile(bucketName, uniqueFileName, fileStream);
-                model.addAttribute("message", "Файл " + uniqueFileName + " успешно загружен.");
+                String objectName = file.getOriginalFilename();
+                minioService.uploadFile(bucketName, objectName, fileStream);
+                model.addAttribute("message", "Файл " + file.getOriginalFilename() + " успешно загружен.");
             } catch (Exception e) {
                 e.printStackTrace();
                 model.addAttribute("message", "Ошибка загрузки файла " + file.getOriginalFilename() + ": " + e.getMessage());
             }
         }
-
         return "redirect:/";
     }
 }
