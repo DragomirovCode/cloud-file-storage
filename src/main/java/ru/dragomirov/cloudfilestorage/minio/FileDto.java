@@ -1,14 +1,13 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class FileDto {
 
     public Long id;
-    public MultipartFile[] files;
+    public String name;
+    public String minioPath;
+    public FolderDto folderDto;
 
 }
