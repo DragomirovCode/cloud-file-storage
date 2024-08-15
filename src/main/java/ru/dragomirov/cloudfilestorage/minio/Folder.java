@@ -1,22 +1,22 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @NoArgsConstructor
+@Table(name = "folder")
 public class Folder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
