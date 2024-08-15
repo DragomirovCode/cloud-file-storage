@@ -25,6 +25,7 @@ public class HomeController {
                     .toList();
             model.addAttribute("objects", objectNames);
             model.addAttribute("bucketName", bucketName);
+            model.addAttribute("newFile", new File());
             return "home";
         } catch (Exception e) {
             e.printStackTrace();
