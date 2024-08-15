@@ -32,9 +32,12 @@
 </head>
 <body>
 <form enctype="multipart/form-data" action="/upload" method="POST">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:object="${newFile}"/>
+    <!-- Поле для выбора файла -->
     <label for="files">Выберите файлы:</label>
     <input accept="*" name="files" type="file" id="files" multiple required>
+
+    <!-- Поле для указания идентификатора папки -->
     <input type="submit" value="Отправить">
 </form>
 
