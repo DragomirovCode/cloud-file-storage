@@ -85,28 +85,31 @@
 <!-- Rest of your HTML code -->
 
 <h1>Объекты в бакете "<span th:text="${bucketName}"></span>"</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Имя объекта</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="objectName : ${objects}">
-        <td th:text="${objectName}"></td>
-        <td>
-            <form action="/delete-file" method="POST" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="_method" value="DELETE"/>
-                <input type="hidden" name="bucketName" th:value="${bucketName}"/>
-                <input type="hidden" name="objectName" th:value="${objectName}"/>
-                <button type="submit" class="delete-button">
-                    delete <i class="fa-solid fa-trash"></i>
-                </button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<tbody>
+<tr th:each="objectName : ${objects}">
+    <td>
+        <!-- Если объект - это папка (например, проверка на наличие слеша в имени объекта) -->
+        <span th:if="${objectName.endsWith('/')}">
+    <a th:href="@{|/?bucketName=${bucketName}&path=${objectName}|}" th:text="${objectName}"></a>
+        </span>
+
+
+        <!-- Если объект не папка (например, файл) -->
+        <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
+    </td>
+    <td>
+        <form action="/delete-file" method="POST" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="_method" value="DELETE"/>
+            <input type="hidden" name="bucketName" th:value="${bucketName}"/>
+            <input type="hidden" name="objectName" th:value="${objectName}"/>
+            <button type="submit" class="delete-button">
+                delete <i class="fa-solid fa-trash"></i>
+            </button>
+        </form>
+    </td>
+</tr>
+</tbody>
+
 </body>
 </html>
