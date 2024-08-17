@@ -28,19 +28,20 @@ public class MinioService {
         );
     }
 
-    public List<Item> listObjects(String bucketName) throws Exception {
+    public List<Item> listObjects(String bucketName, String path) throws Exception {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
+                        .prefix(path)  // Указываем путь для фильтрации
+                        .delimiter("/")  // Используем, чтобы разделять папки
                         .build()
         );
 
-        List<Item> itemList = new ArrayList<>();
+        List<Item> objects = new ArrayList<>();
         for (Result<Item> result : results) {
-            itemList.add(result.get());
+            objects.add(result.get());
         }
-
-        return itemList;
+        return objects;
     }
 
     public void deleteFile(String bucketName, String objectName) throws Exception {
