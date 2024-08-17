@@ -1,5 +1,6 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
+import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +34,8 @@ public class HomeController {
                 path += "/";
             }
 
-            List<String> objectNames = minioService.listObjects(bucketName).stream()
-                    .map(item -> item.objectName())
+            List<String> objectNames = minioService.listObjects(bucketName, path).stream()
+                    .map(Item::objectName)  // Преобразуем объекты в строки с именами файлов/папок
                     .toList();
 
             model.addAttribute("objects", objectNames);
@@ -48,4 +49,5 @@ public class HomeController {
             return "error";
         }
     }
+
 }
