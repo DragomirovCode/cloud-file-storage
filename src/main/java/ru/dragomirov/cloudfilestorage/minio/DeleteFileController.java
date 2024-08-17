@@ -19,7 +19,7 @@ public class DeleteFileController {
                              @RequestParam("objectName") String objectName) {
         try {
             minioService.deleteFile(bucketName, objectName);
-            return "redirect:/";
+            return "redirect:/?bucketName=" + bucketName;
         } catch (Exception e) {
             e.printStackTrace();
             return "error";

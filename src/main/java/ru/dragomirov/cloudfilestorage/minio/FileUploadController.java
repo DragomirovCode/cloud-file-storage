@@ -19,7 +19,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public String uploadFiles(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
+    public String uploadFiles(@RequestParam(name = "bucketName") String bucketName,
                               @RequestParam(name = "files") MultipartFile[] files, Model model) {
 
         for (MultipartFile file : files) {
@@ -34,7 +34,7 @@ public class FileUploadController {
                 model.addAttribute("message", "Ошибка загрузки файла " + file.getOriginalFilename() + ": " + e.getMessage());
             }
         }
-        return "redirect:/";
+        return "redirect:/?bucketName=" + bucketName;
     }
 }
 

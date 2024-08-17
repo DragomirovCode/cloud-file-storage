@@ -33,6 +33,6 @@ public class PackageUploadController {
                 model.addAttribute("message", "Ошибка загрузки файла " + file.getOriginalFilename() + ": " + e.getMessage());
             }
         }
-        return "redirect:/";
+        return "redirect:/?bucketName=" + bucketName;
     }
 }
