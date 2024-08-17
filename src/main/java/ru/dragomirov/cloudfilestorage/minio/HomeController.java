@@ -22,7 +22,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String getListObjects(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
+    public String getListObjects(@RequestParam(name = "bucketName") String bucketName,
                                  @RequestParam(name = "path", required = false) String path,
                                  Model model) {
         try {
