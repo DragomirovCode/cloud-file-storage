@@ -30,6 +30,9 @@ public class DeleteFileController {
                 }
             }
 
+            path = path.replaceAll("\\s+", "");
+            path = path.replace(",", "/");
+
             if (!path.isEmpty() && !path.endsWith("/")) {
                 path += "/";
             }
