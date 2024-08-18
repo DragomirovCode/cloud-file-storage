@@ -16,10 +16,26 @@ public class DeleteFileController {
 
     @DeleteMapping("/delete-file")
     public String deleteFile(@RequestParam("bucketName") String bucketName,
+                             @RequestParam(name = "path", required = false) String path,
                              @RequestParam("objectName") String objectName) {
         try {
+            // Очистка пути
+            if (path == null) {
+                path = "";
+            } else {
+                // Преобразование в строку и удаление пробелов
+                path = path.toString().trim();
+                if (path.startsWith("[") && path.endsWith("]")) {
+                    path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
+                }
+            }
+
+            if (!path.isEmpty() && !path.endsWith("/")) {
+                path += "/";
+            }
+
             minioService.deleteFile(bucketName, objectName);
-            return "redirect:/?bucketName=" + bucketName;
+            return "redirect:/?bucketName=" + bucketName + "&path=" + path;
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
