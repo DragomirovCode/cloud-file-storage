@@ -55,7 +55,7 @@ public class FileUploadController {
                 model.addAttribute("message", "Ошибка загрузки файла " + file.getOriginalFilename() + ": " + e.getMessage());
             }
         }
-        return "redirect:/?bucketName=" + bucketName;
+        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
 
