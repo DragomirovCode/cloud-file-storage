@@ -38,6 +38,9 @@ public class PackageUploadController {
             path += "/";
         }
 
+        path = path.replaceAll("\\s+", "");
+        path = path.replace(",", "/");
+
         for (MultipartFile file : files) {
             try {
                 InputStream fileStream = file.getInputStream();
