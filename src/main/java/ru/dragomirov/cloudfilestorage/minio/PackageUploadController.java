@@ -20,12 +20,31 @@ public class PackageUploadController {
 
     @PostMapping("/package-upload")
     public String uploadPackage(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
-                       @RequestParam(name = "package-files") MultipartFile[] files, Model model) {
+                                @RequestParam(name = "path", required = false) String path,
+                                @RequestParam(name = "package-files") MultipartFile[] files, Model model) {
+
+        // Очистка пути
+        if (path == null) {
+            path = "";
+        } else {
+            // Преобразование в строку и удаление пробелов
+            path = path.toString().trim();
+            if (path.startsWith("[") && path.endsWith("]")) {
+                path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
+            }
+        }
+
+        if (!path.isEmpty() && !path.endsWith("/")) {
+            path += "/";
+        }
+
         for (MultipartFile file : files) {
             try {
                 InputStream fileStream = file.getInputStream();
 
-                String objectName = file.getOriginalFilename();
+                // Формирование имени объекта
+                String objectName = path + file.getOriginalFilename();
+
                 minioService.uploadFile(bucketName, objectName, fileStream);
                 model.addAttribute("message", "Файл " + file.getOriginalFilename() + " успешно загружен.");
             } catch (Exception e) {
