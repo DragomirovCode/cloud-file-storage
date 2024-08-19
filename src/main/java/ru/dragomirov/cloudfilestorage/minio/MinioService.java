@@ -2,6 +2,7 @@ package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.*;
 import io.minio.messages.Item;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,5 +80,34 @@ public class MinioService {
                         .object(objectName)
                         .build()
         );
+    }
+
+    @SneakyThrows
+    public void deleteFolder(String bucketName, String folderPrefix) {
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(folderPrefix)
+                        .recursive(true)
+                        .build()
+        );
+
+        List<String> objectsToDelete = new ArrayList<>();
+        for (Result<Item> result : results) {
+            Item item = result.get();
+            objectsToDelete.add(item.objectName());
+        }
+
+        if (!objectsToDelete.isEmpty()) {
+            for (String objectName : objectsToDelete) {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(objectName)
+                                .build()
+                );
+
+            }
+        }
     }
 }
