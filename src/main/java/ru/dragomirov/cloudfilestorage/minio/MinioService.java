@@ -20,6 +20,21 @@ public class MinioService {
         this.minioClient = minioClient;
     }
 
+    @SneakyThrows
+    public void createFolder(String bucketName, String folderName) {
+        InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
+        String objectName = folderName + "/.keep";
+
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .stream(keepFileStream, 0, -1)
+                        .build()
+        );
+    }
+
+
     public void uploadFile(String bucketName, String objectName, InputStream fileStream) throws Exception {
         String folderPath = objectName.substring(0, objectName.lastIndexOf('/') + 1);
 
