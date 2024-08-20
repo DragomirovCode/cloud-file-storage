@@ -26,8 +26,14 @@ public class HomeController {
                                  @RequestParam(name = "path", required = false) String path,
                                  Model model) {
         try {
+            // Очистка пути
             if (path == null) {
                 path = "";
+            } else {
+                path = path.trim();
+                if (path.startsWith("[") && path.endsWith("]")) {
+                    path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
+                }
             }
 
             if (!path.isEmpty() && !path.endsWith("/")) {
@@ -35,13 +41,26 @@ public class HomeController {
             }
 
             List<String> objectNames = minioService.listObjects(bucketName, path).stream()
-                    .map(Item::objectName)  // Преобразуем объекты в строки с именами файлов/папок
+                    .map(Item::objectName)
                     .toList();
 
+            List<String> folderNames = getFolderNamesForPath(path.trim());
+
+            // Проверка: если список пуст или содержит один элемент, который после обрезания пробелов пуст или равен "/"
+            boolean isEmptyPath = folderNames.isEmpty() ||
+                    (folderNames.size() == 1 &&
+                            (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
+
+            System.out.println("folderNames.size(): " + folderNames.size());
+            System.out.println("folderNames.get(0): " + (folderNames.isEmpty() ? "empty" : folderNames.get(0)));
+            System.out.println("isEmptyPath: " + isEmptyPath);
+
+            model.addAttribute("isEmptyPath", isEmptyPath);
             model.addAttribute("objects", objectNames);
             model.addAttribute("bucketName", bucketName);
             model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
-            model.addAttribute("currentPath", getFolderNamesForPath(path));
+            model.addAttribute("currentPath", folderNames);
+
             return "home";
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,5 +68,7 @@ public class HomeController {
             return "error";
         }
     }
+
+
 
 }
