@@ -59,7 +59,7 @@ public class HomeController {
             model.addAttribute("objects", objectNames);
             model.addAttribute("bucketName", bucketName);
             model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
-            model.addAttribute("currentPath", folderNames);
+            model.addAttribute("currentPath", getFolderNamesForPath(path));
 
             return "home";
         } catch (Exception e) {
