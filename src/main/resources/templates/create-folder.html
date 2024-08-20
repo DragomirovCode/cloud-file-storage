@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>create folder</title>
+</head>
+<body>
+<div class="container my-5 p-5" style="border:1px solid black;">
+    <form class="col-md-4 offset-md-4" th:action="@{/create-new-folder}" method="POST">
+
+        <div class="mb-3">
+            <label for="folderName" class="form-label">name for folder: </label>
+            <input type="text" class="form-control" id="folderName" name="folderName">
+        </div>
+        <center><button type="submit" class="btn btn-primary">create</button></center>
+    </form>
+</div>
+</body>
+</html>
