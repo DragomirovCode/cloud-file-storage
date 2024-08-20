@@ -104,7 +104,7 @@
 <!-- Rest of your HTML code -->
 
 <tbody>
-<tr th:each="objectName : ${objects}">
+<tr th:each="objectName : ${objects}" th:if="${!objectName.endsWith('.keep')}">
     <td>
         <!-- Если объект - это папка (например, проверка на наличие слеша в имени объекта) -->
         <span th:if="${objectName.endsWith('/')}">
