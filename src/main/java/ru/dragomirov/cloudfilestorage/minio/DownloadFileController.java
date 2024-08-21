@@ -21,17 +21,36 @@ public class DownloadFileController {
     @GetMapping("/download-file")
     String get(
             @RequestParam(name = "bucketName") String bucketName,
-            @RequestParam(name = "objectName") String objectName
+            @RequestParam(name = "objectName") String objectName,
+            @RequestParam(name = "path") String path
     ) {
+
+        if (path == null) {
+            path = "";
+        } else {
+            // Преобразование в строку и удаление пробелов
+            path = path.toString().trim();
+            if (path.startsWith("[") && path.endsWith("]")) {
+                path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
+            }
+        }
+
+        path = path.replaceAll("\\s+", "");
+        path = path.replace(",", "/");
+
+        if (!path.isEmpty() && !path.endsWith("/")) {
+            path += "/";
+        }
+
         String homeDir = System.getProperty("user.home");
         String downloadsDir = homeDir + File.separator + "Downloads";
 
-        Path path = Paths.get(objectName);
-        String endFileName = path.getFileName().toString();
+        Path pathFile = Paths.get(objectName);
+        String endFileName = pathFile.getFileName().toString();
 
         String destinationFilePath = downloadsDir + File.separator + endFileName;
 
         minioService.downloadFile(bucketName, objectName, destinationFilePath);
-        return "redirect:/?bucketName=" + bucketName;
+        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
