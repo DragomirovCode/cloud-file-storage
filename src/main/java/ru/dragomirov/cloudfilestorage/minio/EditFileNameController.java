@@ -42,11 +42,20 @@ public class EditFileNameController {
         String allNewObjectName;
         Path parentPath = pathFile.getParent();
 
+        String fileName = pathFile.getFileName().toString();
+        int dotIndex = fileName.lastIndexOf('.');
+
+        String fileExtension = "";
+        if (dotIndex != -1) {
+            fileExtension = fileName.substring(dotIndex); // расширение с точкой
+        }
+
+        String newFileNameWithExtension = newObjectName + fileExtension;
+
         if (parentPath != null) {
             String pathBeforeFileName = parentPath.toString();
             pathBeforeFileName = pathBeforeFileName.replace("\\", "/");
-            System.out.println(pathBeforeFileName + " pathBeforeFileName");
-            allNewObjectName = pathBeforeFileName + "/" + newObjectName;
+            allNewObjectName = pathBeforeFileName + "/" + newFileNameWithExtension;
         } else {
             allNewObjectName = newObjectName;
         }
