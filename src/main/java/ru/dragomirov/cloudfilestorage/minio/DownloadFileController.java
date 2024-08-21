@@ -5,6 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Controller
 public class DownloadFileController {
     private final MinioService minioService;
@@ -19,9 +23,15 @@ public class DownloadFileController {
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName
     ) {
-        String path = "C:\\Users\\Твой дом\\OneDrive\\Рабочий стол\\new-folder\\Screenshot_1.png";
+        String homeDir = System.getProperty("user.home");
+        String downloadsDir = homeDir + File.separator + "Downloads";
 
-        minioService.downloadFile(bucketName, objectName, path);
+        Path path = Paths.get(objectName);
+        String endFileName = path.getFileName().toString();
+
+        String destinationFilePath = downloadsDir + File.separator + endFileName;
+
+        minioService.downloadFile(bucketName, objectName, destinationFilePath);
         return "redirect:/?bucketName=" + bucketName;
     }
 }
