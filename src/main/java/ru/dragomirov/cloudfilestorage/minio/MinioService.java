@@ -22,6 +22,31 @@ public class MinioService {
     }
 
     @SneakyThrows
+    public void editFile(String bucketName, String oldObjectName, String newObjectName) {
+
+        CopySource copySource = CopySource.builder()
+                .bucket(bucketName)
+                .object(oldObjectName)
+                .build();
+
+        minioClient.copyObject(
+                CopyObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(newObjectName)
+                        .source(copySource)
+                        .build()
+        );
+
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(oldObjectName)
+                        .build()
+        );
+
+    }
+
+    @SneakyThrows
     public void downloadFile(String bucketName, String objectName, String destinationFilePath) {
 
         InputStream stream = minioClient.getObject(
