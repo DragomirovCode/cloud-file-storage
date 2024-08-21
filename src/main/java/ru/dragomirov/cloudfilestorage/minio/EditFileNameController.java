@@ -47,7 +47,7 @@ public class EditFileNameController {
 
         String fileExtension = "";
         if (dotIndex != -1) {
-            fileExtension = fileName.substring(dotIndex); // расширение с точкой
+            fileExtension = fileName.substring(dotIndex);
         }
 
         String newFileNameWithExtension = newObjectName + fileExtension;
@@ -63,5 +63,4 @@ public class EditFileNameController {
         minioService.editFile(bucketName, oldObjectName, allNewObjectName);
         return "redirect:/?bucketName=" + bucketName;
     }
-
 }
