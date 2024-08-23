@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 @Controller
 public class DeleteFolderController {
-    private final MinioService minioService;
+    private final DeleteFolderService deleteFolderService;
 
     @Autowired
-    public DeleteFolderController(MinioService minioService) {
-        this.minioService = minioService;
+    public DeleteFolderController(DeleteFolderService deleteFolderService) {
+        this.deleteFolderService = deleteFolderService;
     }
+
 
     @DeleteMapping("/delete-bucket")
     public String post(
@@ -37,7 +37,7 @@ public class DeleteFolderController {
         path = path.replaceAll("\\s+", "");
         path = path.replace(",", "/");
 
-        minioService.deleteFolder(bucketName, path);
+        deleteFolderService.deleteFolder(bucketName, path);
 
         return "redirect:/?bucketName=home";
     }
