@@ -51,11 +51,23 @@ public class HomeController {
                     (folderNames.size() == 1 &&
                             (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
 
+            String fullPath = getFolderNamesForPath(path).toString();
+
+            if (fullPath == null) {
+                fullPath = "";
+            } else {
+                fullPath = fullPath.trim();
+                if (fullPath.startsWith("[") && fullPath.endsWith("]")) {
+                    fullPath = fullPath.substring(1, fullPath.length() - 1);
+                }
+            }
+
             model.addAttribute("isEmptyPath", isEmptyPath);
             model.addAttribute("objects", objectNames);
             model.addAttribute("bucketName", bucketName);
             model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
             model.addAttribute("currentPath", getFolderNamesForPath(path));
+            model.addAttribute("fullPath", fullPath);
 
             return "home";
         } catch (Exception e) {
