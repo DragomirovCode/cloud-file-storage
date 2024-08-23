@@ -10,18 +10,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 
 @Controller
-public class PackageUploadController {
+public class UploadFileController {
     private final MinioService minioService;
 
     @Autowired
-    public PackageUploadController(MinioService minioService) {
+    public UploadFileController(MinioService minioService) {
         this.minioService = minioService;
     }
 
-    @PostMapping("/package-upload")
-    public String uploadPackage(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
-                                @RequestParam(name = "path", required = false) String path,
-                                @RequestParam(name = "package-files") MultipartFile[] files, Model model) {
+    @PostMapping("/upload")
+    public String uploadFiles(@RequestParam(name = "bucketName") String bucketName,
+                              @RequestParam(name = "path", required = false) String path,
+                              @RequestParam(name = "files") MultipartFile[] files, Model model) {
 
         // Очистка пути
         if (path == null) {
@@ -48,6 +48,9 @@ public class PackageUploadController {
                 // Формирование имени объекта
                 String objectName = path + file.getOriginalFilename();
 
+                // Убедитесь, что объектное имя корректное
+                System.out.println("Uploading to: " + objectName);
+
                 minioService.uploadFile(bucketName, objectName, fileStream);
                 model.addAttribute("message", "Файл " + file.getOriginalFilename() + " успешно загружен.");
             } catch (Exception e) {
@@ -58,3 +61,4 @@ public class PackageUploadController {
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
+
