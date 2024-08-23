@@ -1,9 +1,10 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.delete;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 @Controller
 public class DeleteFileController {
