@@ -6,18 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
 public class UpdateFolderNameController {
-    private final MinioService minioService;
+    private final UpdateFolderService updateFolderService;
 
     @Autowired
-    public UpdateFolderNameController(MinioService minioService) {
-        this.minioService = minioService;
+    public UpdateFolderNameController(UpdateFolderService updateFolderService) {
+        this.updateFolderService = updateFolderService;
     }
 
     @GetMapping("/pattern-edit-name-folder")
@@ -45,9 +44,7 @@ public class UpdateFolderNameController {
             parent = Paths.get("");
         }
 
-
-        // Передача параметров в MinioService
-        minioService.editFolder(bucketName, objectName, newObjectName, parent.toString());
+        updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent.toString());
 
         return "redirect:/?bucketName=" + bucketName;
     }
