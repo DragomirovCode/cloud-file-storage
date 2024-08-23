@@ -6,17 +6,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 import java.io.InputStream;
 
 @Controller
 public class UploadFileController {
-    private final MinioService minioService;
+    private final UploadService uploadService;
 
     @Autowired
-    public UploadFileController(MinioService minioService) {
-        this.minioService = minioService;
+    public UploadFileController(UploadService uploadService) {
+        this.uploadService = uploadService;
     }
 
     @PostMapping("/upload")
@@ -52,7 +51,7 @@ public class UploadFileController {
                 // Убедитесь, что объектное имя корректное
                 System.out.println("Uploading to: " + objectName);
 
-                minioService.uploadFile(bucketName, objectName, fileStream);
+                uploadService.uploadFile(bucketName, objectName, fileStream);
                 model.addAttribute("message", "Файл " + file.getOriginalFilename() + " успешно загружен.");
             } catch (Exception e) {
                 e.printStackTrace();
