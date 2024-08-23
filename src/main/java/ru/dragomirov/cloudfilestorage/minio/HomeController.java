@@ -51,10 +51,6 @@ public class HomeController {
                     (folderNames.size() == 1 &&
                             (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
 
-            System.out.println("folderNames.size(): " + folderNames.size());
-            System.out.println("folderNames.get(0): " + (folderNames.isEmpty() ? "empty" : folderNames.get(0)));
-            System.out.println("isEmptyPath: " + isEmptyPath);
-
             model.addAttribute("isEmptyPath", isEmptyPath);
             model.addAttribute("objects", objectNames);
             model.addAttribute("bucketName", bucketName);
