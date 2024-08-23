@@ -12,11 +12,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-public class EditFileNameController {
+public class UpdateFileNameController {
     private final MinioService minioService;
 
     @Autowired
-    public EditFileNameController(MinioService minioService) {
+    public UpdateFileNameController(MinioService minioService) {
         this.minioService = minioService;
     }
 
