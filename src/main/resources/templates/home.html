@@ -73,7 +73,7 @@
     <input type="hidden" name="bucketName" th:value="${bucketName}"/>
     <input type="hidden" name="path" th:value="${currentPath}"/>
     <label for="files">Выберите папку:</label>
-    <input accept="*" name="package-files" type="file" id="package-files"  multiple webkitdirectory required>
+    <input accept="*" name="package-files" type="file" id="package-files" multiple webkitdirectory required>
     <input type="submit" value="Отправить файл">
 </form>
 
@@ -113,6 +113,11 @@
         <!-- Если объект - это папка -->
         <span th:if="${objectName.endsWith('/')}">
             <a th:href="@{|/?bucketName=${bucketName}&path=${objectName}|}" th:text="${objectName}"></a>
+
+            <a class="nav-link text-white"
+               th:href="@{|/pattern-edit-name-folder?bucketName=${bucketName}&objectName=${objectName}|}">
+            edit name folder
+        </a>
         </span>
 
         <!-- Если объект не папка (это файл) -->
@@ -143,7 +148,8 @@
             </form>
 
             <!-- Ссылка на редактирование имени файла -->
-            <a class="nav-link text-white" th:href="@{|/pattern-edit-name-file?bucketName=${bucketName}&objectName=${objectName}|}">
+            <a class="nav-link text-white"
+               th:href="@{|/pattern-edit-name-file?bucketName=${bucketName}&objectName=${objectName}|}">
                 edit name file
             </a>
         </span>
