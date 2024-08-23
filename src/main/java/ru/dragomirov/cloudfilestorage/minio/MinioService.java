@@ -106,9 +106,11 @@ public class MinioService {
     }
 
     @SneakyThrows
-    public void createFolder(String bucketName, String folderName) {
+    public void createFolder(String bucketName, String folderName, String path) {
         InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
-        String objectName = folderName + "/.keep";
+        String objectName = path + "/" + folderName + "/.keep";
+
+        System.out.println("path: " + path);
 
         minioClient.putObject(
                 PutObjectArgs.builder()
