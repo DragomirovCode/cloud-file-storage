@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 @Controller
 public class DeleteFileController {
-    private final MinioService minioService;
+    private final DeleteFileService deleteFileService;
 
     @Autowired
-    public DeleteFileController(MinioService minioService) {
-        this.minioService = minioService;
+    public DeleteFileController(DeleteFileService deleteFileService) {
+        this.deleteFileService = deleteFileService;
     }
 
     @DeleteMapping("/delete-file")
@@ -38,7 +37,7 @@ public class DeleteFileController {
                 path += "/";
             }
 
-            minioService.deleteFile(bucketName, objectName);
+            deleteFileService.deleteFile(bucketName, objectName);
             return "redirect:/?bucketName=" + bucketName + "&path=" + path;
         } catch (Exception e) {
             e.printStackTrace();
