@@ -6,15 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.MinioService;
 
 @Controller
 public class CreateFolderController {
-    private final MinioService minioService;
+    private final CreateFolderService createFolderService;
 
     @Autowired
-    public CreateFolderController(MinioService minioService) {
-        this.minioService = minioService;
+    public CreateFolderController(CreateFolderService createFolderService) {
+        this.createFolderService = createFolderService;
     }
 
     @GetMapping("/pattern-create-new-folder")
@@ -33,7 +32,7 @@ public class CreateFolderController {
             @RequestParam(name = "folderName") String folderName,
             @RequestParam(name = "path") String path
     ) {
-        minioService.createFolder(bucketName, folderName, path);
+        createFolderService.createFolder(bucketName, folderName, path);
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
