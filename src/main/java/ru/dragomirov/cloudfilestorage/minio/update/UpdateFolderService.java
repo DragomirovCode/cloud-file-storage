@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UpdateNameFolderService {
+public class UpdateFolderService {
     private final MinioClient minioClient;
 
     @Autowired
-    public UpdateNameFolderService(MinioClient minioClient) {
+    public UpdateFolderService(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
