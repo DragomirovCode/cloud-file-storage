@@ -2,6 +2,7 @@ package ru.dragomirov.cloudfilestorage.minio;
 
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -47,5 +48,15 @@ public class PathUtil {
             pathBeforeFileName = subPath.toString();
         }
         return pathBeforeFileName;
+    }
+
+    public String getDownloadsFilePath(String objectName) {
+        String homeDir = System.getProperty("user.home");
+        String downloadsDir = homeDir + File.separator + "Downloads";
+
+        Path pathFile = Paths.get(objectName);
+        String endFileName = pathFile.getFileName().toString();
+
+        return downloadsDir + File.separator + endFileName;
     }
 }
