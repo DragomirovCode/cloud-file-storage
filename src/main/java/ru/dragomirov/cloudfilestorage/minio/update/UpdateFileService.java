@@ -17,25 +17,33 @@ public class UpdateFileService {
         this.minioClient = minioClient;
     }
 
-    @SneakyThrows
     public void updateFile(String bucketName, String oldObjectName, String newObjectName) {
+        copyObject(bucketName, oldObjectName, newObjectName);
+        removeObject(bucketName, oldObjectName);
+    }
+
+    @SneakyThrows
+    private void copyObject(String bucketName, String sourceObjectName, String destinationObjectName) {
         CopySource copySource = CopySource.builder()
                 .bucket(bucketName)
-                .object(oldObjectName)
+                .object(sourceObjectName)
                 .build();
 
         minioClient.copyObject(
                 CopyObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(newObjectName)
+                        .object(destinationObjectName)
                         .source(copySource)
                         .build()
         );
+    }
 
+    @SneakyThrows
+    private void removeObject(String bucketName, String objectName) {
         minioClient.removeObject(
                 RemoveObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(oldObjectName)
+                        .object(objectName)
                         .build()
         );
     }
