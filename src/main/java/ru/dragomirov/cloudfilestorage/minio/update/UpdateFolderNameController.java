@@ -22,11 +22,13 @@ public class UpdateFolderNameController {
     @GetMapping("/pattern-edit-name-folder")
     public String get(
             @RequestParam(name = "bucketName") String bucketName,
+            @RequestParam(name = "path") String path,
             @RequestParam(name = "objectName") String objectName,
             Model model
     ) {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
+        model.addAttribute("childPaths", path);
         return "edit-folder";
     }
 
@@ -34,12 +36,13 @@ public class UpdateFolderNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName,
-            @RequestParam(name = "newObjectName") String newObjectName
+            @RequestParam(name = "newObjectName") String newObjectName,
+            @RequestParam(name = "path") String path
     ) {
         String parent = pathUtil.getParentPathSafe(objectName);
 
         updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent);
 
-        return "redirect:/?bucketName=" + bucketName;
+        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
