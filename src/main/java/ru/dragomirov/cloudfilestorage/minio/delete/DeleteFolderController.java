@@ -28,7 +28,7 @@ public class DeleteFolderController {
 
         deleteFolderService.deleteFolder(bucketName, path);
 
-        path = String.valueOf(pathUtil.getPathWithoutLastElement(path));
+        path = pathUtil.getPathWithoutLastElement(path);
 
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
