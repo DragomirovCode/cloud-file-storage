@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container my-5 p-5" style="border:1px solid black;">
-    <form class="col-md-4 offset-md-4" th:action="@{/edit-name-folder}" method="POST">
+    <form class="col-md-4 offset-md-4" th:action="@{/update-name-folder}" method="POST">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <div class="mb-3">
             <label for="newObjectName" class="form-label">name folder: </label>

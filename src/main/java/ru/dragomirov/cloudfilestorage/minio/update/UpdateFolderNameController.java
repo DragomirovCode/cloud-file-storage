@@ -19,7 +19,7 @@ public class UpdateFolderNameController {
         this.pathUtil = pathUtil;
     }
 
-    @GetMapping("/pattern-edit-name-folder")
+    @GetMapping("/pattern-update-name-folder")
     public String get(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "path") String path,
@@ -29,10 +29,10 @@ public class UpdateFolderNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
-        return "edit-folder";
+        return "update-folder";
     }
 
-    @PostMapping("/edit-name-folder")
+    @PostMapping("/update-name-folder")
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName,
