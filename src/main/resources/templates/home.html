@@ -118,7 +118,7 @@
             <a th:href="@{|/?bucketName=${bucketName}&path=${objectName}|}" th:text="${objectName}"></a>
 
             <a class="nav-link text-white"
-               th:href="@{|/pattern-edit-name-folder?bucketName=${bucketName}&objectName=${objectName}|}">
+               th:href="@{|/pattern-edit-name-folder?bucketName=${bucketName}&objectName=${objectName}&path=${childPaths}|}">
             edit name folder
         </a>
         </span>
