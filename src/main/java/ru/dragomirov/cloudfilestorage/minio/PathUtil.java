@@ -59,4 +59,16 @@ public class PathUtil {
 
         return downloadsDir + File.separator + endFileName;
     }
+
+    public String getParentPathSafe(String objectName) {
+        String sanitizedObjectName = objectName.endsWith("/") ? objectName.substring(0, objectName.length() - 1) : objectName;
+        Path pathFile = Paths.get(sanitizedObjectName);
+        Path parent = pathFile.getParent();
+
+        if (parent == null) {
+            parent = Paths.get("");
+        }
+
+        return String.valueOf(parent);
+    }
 }
