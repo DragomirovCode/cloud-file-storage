@@ -18,10 +18,12 @@ public class UploadFolderController {
         this.pathUtil = pathUtil;
     }
 
-    @PostMapping("/package-upload")
-    public String uploadPackage(@RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
-                                @RequestParam(name = "path", required = false) String path,
-                                @RequestParam(name = "package-files") MultipartFile[] files) {
+    @PostMapping("/upload-folder")
+    public String post(
+            @RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
+            @RequestParam(name = "path", required = false) String path,
+            @RequestParam(name = "package-files") MultipartFile[] files
+    ) {
 
         path = pathUtil.clearPath(path);
 
