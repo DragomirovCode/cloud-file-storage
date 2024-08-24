@@ -22,11 +22,13 @@ public class UpdateFileNameController {
     @GetMapping("/pattern-edit-name-file")
     public String get(
             @RequestParam(name = "bucketName") String bucketName,
+            @RequestParam(name = "path") String path,
             @RequestParam(name = "objectName") String objectName,
             Model model
     ) {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
+        model.addAttribute("childPaths", path);
         return "edit-file";
     }
 
@@ -34,11 +36,12 @@ public class UpdateFileNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
-            @RequestParam(name = "newObjectName") String newObjectName
+            @RequestParam(name = "newObjectName") String newObjectName,
+            @RequestParam(name = "path") String path
     ) {
         String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, newObjectName);
 
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
-        return "redirect:/?bucketName=" + bucketName;
+        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
