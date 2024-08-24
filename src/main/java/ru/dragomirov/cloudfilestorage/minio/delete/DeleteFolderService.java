@@ -21,8 +21,15 @@ public class DeleteFolderService {
         this.minioClient = minioClient;
     }
 
-    @SneakyThrows
     public void deleteFolder(String bucketName, String folderPrefix) {
+        List<String> objectsToDelete = listObjectsInFolder(bucketName, folderPrefix);
+        if (!objectsToDelete.isEmpty()) {
+            deleteObjects(bucketName, objectsToDelete);
+        }
+    }
+
+    @SneakyThrows
+    private List<String> listObjectsInFolder(String bucketName, String folderPrefix) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
@@ -36,17 +43,18 @@ public class DeleteFolderService {
             Item item = result.get();
             objectsToDelete.add(item.objectName());
         }
+        return objectsToDelete;
+    }
 
-        if (!objectsToDelete.isEmpty()) {
-            for (String objectName : objectsToDelete) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder()
-                                .bucket(bucketName)
-                                .object(objectName)
-                                .build()
-                );
-
-            }
+    @SneakyThrows
+    private void deleteObjects(String bucketName, List<String> objectsToDelete) {
+        for (String objectName : objectsToDelete) {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
         }
     }
 }
