@@ -1,47 +1,33 @@
 package ru.dragomirov.cloudfilestorage.minio.delete;
 
+import lombok.SneakyThrows;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
 public class DeleteFileController {
     private final DeleteFileService deleteFileService;
+    private final PathUtil pathUtil;
 
     @Autowired
-    public DeleteFileController(DeleteFileService deleteFileService) {
+    public DeleteFileController(DeleteFileService deleteFileService, PathUtil pathUtil) {
         this.deleteFileService = deleteFileService;
+        this.pathUtil = pathUtil;
     }
 
+    @SneakyThrows
     @DeleteMapping("/delete-file")
     public String deleteFile(@RequestParam("bucketName") String bucketName,
                              @RequestParam(name = "path", required = false) String path,
                              @RequestParam("objectName") String objectName) {
-        try {
-            // Очистка пути
-            if (path == null) {
-                path = "";
-            } else {
-                // Преобразование в строку и удаление пробелов
-                path = path.toString().trim();
-                if (path.startsWith("[") && path.endsWith("]")) {
-                    path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
-                }
-            }
 
-            path = path.replaceAll("\\s+", "");
-            path = path.replace(",", "/");
+        path = pathUtil.clearPath(path);
 
-            if (!path.isEmpty() && !path.endsWith("/")) {
-                path += "/";
-            }
-
-            deleteFileService.deleteFile(bucketName, objectName);
-            return "redirect:/?bucketName=" + bucketName + "&path=" + path;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "error";
-        }
+        deleteFileService.deleteFile(bucketName, objectName);
+        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
