@@ -40,14 +40,14 @@ public class HomeController {
 
         boolean isEmptyPath = pathUtil.isEmptyPath(folderNames);
 
-        String fullPath = pathUtil.clearPath(getFolderNamesForPath(path).toString());
+        String childPaths = pathUtil.clearPath(getFolderNamesForPath(path).toString());
 
         model.addAttribute("isEmptyPath", isEmptyPath);
         model.addAttribute("objects", objectNames);
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("currentPath", getFolderNamesForPath(path));
-        model.addAttribute("fullPath", fullPath);
+        model.addAttribute("childPaths", childPaths);
 
         return "home";
     }
