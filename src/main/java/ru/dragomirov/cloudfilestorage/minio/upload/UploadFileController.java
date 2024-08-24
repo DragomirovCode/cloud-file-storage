@@ -20,10 +20,12 @@ public class UploadFileController {
     }
 
     @SneakyThrows
-    @PostMapping("/upload")
-    public String uploadFiles(@RequestParam(name = "bucketName") String bucketName,
-                              @RequestParam(name = "path", required = false) String path,
-                              @RequestParam(name = "files") MultipartFile[] files) {
+    @PostMapping("/upload-files")
+    public String post(
+            @RequestParam(name = "bucketName") String bucketName,
+            @RequestParam(name = "path", required = false) String path,
+            @RequestParam(name = "files") MultipartFile[] files
+    ) {
 
         path = pathUtil.clearPath(path);
 
