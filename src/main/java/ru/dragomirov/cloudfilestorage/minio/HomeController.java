@@ -1,6 +1,7 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.messages.Item;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,69 +16,39 @@ import static ru.dragomirov.cloudfilestorage.minio.Breadcrumbs.getFolderNamesFor
 @Controller
 public class HomeController {
     private final GetListObjectService getListObjectService;
+    private final PathUtil pathUtil;
 
     @Autowired
-    public HomeController(GetListObjectService getListObjectService) {
+    public HomeController(GetListObjectService getListObjectService, PathUtil pathUtil) {
         this.getListObjectService = getListObjectService;
+        this.pathUtil = pathUtil;
     }
 
-
+    @SneakyThrows
     @GetMapping("/")
     public String getListObjects(@RequestParam(name = "bucketName") String bucketName,
                                  @RequestParam(name = "path", required = false) String path,
                                  Model model) {
-        try {
-            // Очистка пути
-            if (path == null) {
-                path = "";
-            } else {
-                path = path.trim();
-                if (path.startsWith("[") && path.endsWith("]")) {
-                    path = path.substring(1, path.length() - 1);  // Удаление квадратных скобок
-                }
-            }
 
-            if (!path.isEmpty() && !path.endsWith("/")) {
-                path += "/";
-            }
+        path = pathUtil.clearPath(path);
 
-            List<String> objectNames = getListObjectService.listObjects(bucketName, path).stream()
-                    .map(Item::objectName)
-                    .toList();
+        List<String> objectNames = getListObjectService.listObjects(bucketName, path).stream()
+                .map(Item::objectName)
+                .toList();
 
-            List<String> folderNames = getFolderNamesForPath(path.trim());
+        List<String> folderNames = getFolderNamesForPath(path.trim());
 
-            // Проверка: если список пуст или содержит один элемент, который после обрезания пробелов пуст или равен "/"
-            boolean isEmptyPath = folderNames.isEmpty() ||
-                    (folderNames.size() == 1 &&
-                            (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
+        boolean isEmptyPath = pathUtil.isEmptyPath(folderNames);
 
-            String fullPath = getFolderNamesForPath(path).toString();
+        String fullPath = pathUtil.clearPath(getFolderNamesForPath(path).toString());
 
-            if (fullPath == null) {
-                fullPath = "";
-            } else {
-                fullPath = fullPath.trim();
-                if (fullPath.startsWith("[") && fullPath.endsWith("]")) {
-                    fullPath = fullPath.substring(1, fullPath.length() - 1);
-                }
-            }
+        model.addAttribute("isEmptyPath", isEmptyPath);
+        model.addAttribute("objects", objectNames);
+        model.addAttribute("bucketName", bucketName);
+        model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
+        model.addAttribute("currentPath", getFolderNamesForPath(path));
+        model.addAttribute("fullPath", fullPath);
 
-            model.addAttribute("isEmptyPath", isEmptyPath);
-            model.addAttribute("objects", objectNames);
-            model.addAttribute("bucketName", bucketName);
-            model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
-            model.addAttribute("currentPath", getFolderNamesForPath(path));
-            model.addAttribute("fullPath", fullPath);
-
-            return "home";
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Ошибка получения списка объектов: " + e.getMessage());
-            return "error";
-        }
+        return "home";
     }
-
-
-
 }
