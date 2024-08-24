@@ -11,7 +11,7 @@
         <div class="mb-3">
             <label for="folderName" class="form-label">name for folder: </label>
             <input type="text" class="form-control" id="folderName" name="folderName">
-            <input type="hidden" name="path" th:value="${fullPath}"/>
+            <input type="hidden" name="path" th:value="${childPaths}"/>
         </div>
         <center><button type="submit" class="btn btn-primary">create</button></center>
     </form>

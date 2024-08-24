@@ -21,7 +21,7 @@ public class CreateFolderController {
             @RequestParam(name = "path") String path,
             Model model
     ) {
-        model.addAttribute("fullPath", path);
+        model.addAttribute("childPaths", path);
         return "create-folder";
     }
 
