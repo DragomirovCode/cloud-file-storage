@@ -6,17 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
 public class UpdateFolderNameController {
     private final UpdateFolderService updateFolderService;
+    private final PathUtil pathUtil;
 
     @Autowired
-    public UpdateFolderNameController(UpdateFolderService updateFolderService) {
+    public UpdateFolderNameController(UpdateFolderService updateFolderService, PathUtil pathUtil) {
         this.updateFolderService = updateFolderService;
+        this.pathUtil = pathUtil;
     }
 
     @GetMapping("/pattern-edit-name-folder")
@@ -36,15 +36,9 @@ public class UpdateFolderNameController {
             @RequestParam(name = "objectName") String objectName,
             @RequestParam(name = "newObjectName") String newObjectName
     ) {
-        String sanitizedObjectName = objectName.endsWith("/") ? objectName.substring(0, objectName.length() - 1) : objectName;
-        Path pathFile = Paths.get(sanitizedObjectName);
-        Path parent = pathFile.getParent();
+        String parent = pathUtil.getParentPathSafe(objectName);
 
-        if (parent == null) {
-            parent = Paths.get("");
-        }
-
-        updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent.toString());
+        updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent);
 
         return "redirect:/?bucketName=" + bucketName;
     }
