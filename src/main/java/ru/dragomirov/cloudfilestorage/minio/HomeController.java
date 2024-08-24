@@ -14,12 +14,13 @@ import static ru.dragomirov.cloudfilestorage.minio.Breadcrumbs.getFolderNamesFor
 
 @Controller
 public class HomeController {
-    private final MinioService minioService;
+    private final GetListObjectService getListObjectService;
 
     @Autowired
-    public HomeController(MinioService minioService) {
-        this.minioService = minioService;
+    public HomeController(GetListObjectService getListObjectService) {
+        this.getListObjectService = getListObjectService;
     }
+
 
     @GetMapping("/")
     public String getListObjects(@RequestParam(name = "bucketName") String bucketName,
@@ -40,7 +41,7 @@ public class HomeController {
                 path += "/";
             }
 
-            List<String> objectNames = minioService.listObjects(bucketName, path).stream()
+            List<String> objectNames = getListObjectService.listObjects(bucketName, path).stream()
                     .map(Item::objectName)
                     .toList();
 
