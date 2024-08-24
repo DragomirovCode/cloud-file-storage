@@ -24,31 +24,46 @@ public class UploadService {
         this.minioClient = minioClient;
     }
 
-    public void uploadFile(String bucketName, String objectName, InputStream fileStream) throws Exception {
-        String folderPath = objectName.substring(0, objectName.lastIndexOf('/') + 1);
+    @SneakyThrows
+    public void uploadFile(String bucketName, String objectName, InputStream fileStream) {
+        String folderPath = extractFolderPath(objectName);
 
+        if (!keepFileExists(bucketName, folderPath)) {
+            createKeepFile(bucketName, folderPath);
+        }
+
+        uploadObject(bucketName, objectName, fileStream);
+    }
+
+    private String extractFolderPath(String objectName) {
+        return objectName.substring(0, objectName.lastIndexOf('/') + 1);
+    }
+
+    private boolean keepFileExists(String bucketName, String folderPath){
         List<Item> objectsInPath = listObjects(bucketName, folderPath);
-        boolean keepFileExists = false;
 
         for (Item item : objectsInPath) {
             if (item.objectName().equals(folderPath + ".keep")) {
-                keepFileExists = true;
-                break;
+                return true;
             }
         }
+        return false;
+    }
 
-        if (!keepFileExists) {
-            InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
-            String keepFileName = folderPath + ".keep";
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(keepFileName)
-                            .stream(keepFileStream, 0, -1)
-                            .build()
-            );
-        }
+    private void createKeepFile(String bucketName, String folderPath) throws Exception {
+        InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
+        String keepFileName = folderPath + ".keep";
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(keepFileName)
+                        .stream(keepFileStream, 0, -1)
+                        .build()
+        );
+    }
 
+    @SneakyThrows
+    private void uploadObject(String bucketName, String objectName, InputStream fileStream) {
         minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
