@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 @Service
@@ -19,18 +20,28 @@ public class DownloadFileService {
     }
 
     @SneakyThrows
-    public void downloadFile(String bucketName, String objectName, String destinationFilePath) {
-        InputStream stream = minioClient.getObject(
+    private InputStream getFileStream(String bucketName, String objectName){
+        return minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
                         .object(objectName)
                         .build());
+    }
 
-        FileOutputStream fos = new FileOutputStream(destinationFilePath);
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        while ((bytesRead = stream.read(buffer)) != -1) {
-            fos.write(buffer, 0, bytesRead);
+    @SneakyThrows
+    private void saveFileFromStream(InputStream stream, String destinationFilePath) {
+        try (FileOutputStream fos = new FileOutputStream(destinationFilePath)) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = stream.read(buffer)) != -1) {
+                fos.write(buffer, 0, bytesRead);
+            }
+        }
+    }
+
+    public void downloadFile(String bucketName, String objectName, String destinationFilePath) throws IOException {
+        try (InputStream stream = getFileStream(bucketName, objectName)) {
+            saveFileFromStream(stream, destinationFilePath);
         }
     }
 }
