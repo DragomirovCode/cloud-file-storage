@@ -19,7 +19,7 @@ public class UpdateFileNameController {
         this.fileUtil = fileUtil;
     }
 
-    @GetMapping("/pattern-edit-name-file")
+    @GetMapping("/pattern-update-name-file")
     public String get(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "path") String path,
@@ -29,10 +29,10 @@ public class UpdateFileNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
-        return "edit-file";
+        return "update-file";
     }
 
-    @PostMapping("/edit-name-file")
+    @PostMapping("/update-name-file")
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
