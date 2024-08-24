@@ -6,17 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import ru.dragomirov.cloudfilestorage.minio.FileUtil;
 
 @Controller
 public class UpdateFileNameController {
     private final UpdateFileService updateFileService;
+    private final FileUtil fileUtil;
 
     @Autowired
-    public UpdateFileNameController(UpdateFileService updateFileService) {
+    public UpdateFileNameController(UpdateFileService updateFileService, FileUtil fileUtil) {
         this.updateFileService = updateFileService;
+        this.fileUtil = fileUtil;
     }
 
     @GetMapping("/pattern-edit-name-file")
@@ -36,29 +36,7 @@ public class UpdateFileNameController {
             @RequestParam(name = "objectName") String oldObjectName,
             @RequestParam(name = "newObjectName") String newObjectName
     ) {
-
-        Path pathFile = Paths.get(oldObjectName);
-
-        String allNewObjectName;
-        Path parentPath = pathFile.getParent();
-
-        String fileName = pathFile.getFileName().toString();
-        int dotIndex = fileName.lastIndexOf('.');
-
-        String fileExtension = "";
-        if (dotIndex != -1) {
-            fileExtension = fileName.substring(dotIndex);
-        }
-
-        String newFileNameWithExtension = newObjectName + fileExtension;
-
-        if (parentPath != null) {
-            String pathBeforeFileName = parentPath.toString();
-            pathBeforeFileName = pathBeforeFileName.replace("\\", "/");
-            allNewObjectName = pathBeforeFileName + "/" + newFileNameWithExtension;
-        } else {
-            allNewObjectName = newObjectName;
-        }
+        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, newObjectName);
 
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
         return "redirect:/?bucketName=" + bucketName;
