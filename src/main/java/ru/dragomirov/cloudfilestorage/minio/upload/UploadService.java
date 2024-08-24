@@ -5,8 +5,10 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -56,7 +58,8 @@ public class UploadService {
         );
     }
 
-    public List<Item> listObjects(String bucketName, String path) throws Exception {
+    @SneakyThrows
+    private List<Item> listObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
@@ -71,4 +74,16 @@ public class UploadService {
         }
         return objects;
     }
+
+   @SneakyThrows
+   public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
+       for (MultipartFile file : files) {
+
+           InputStream fileStream = file.getInputStream();
+
+           String objectName = path + file.getOriginalFilename();
+
+           uploadFile(bucketName, objectName, fileStream);
+       }
+   }
 }
