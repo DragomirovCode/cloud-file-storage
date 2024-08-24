@@ -20,11 +20,18 @@ public class UpdateFolderService {
 
     @SneakyThrows
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
+        List<Item> items = getObjectsInFolder(bucketName, oldFolderName);
+        copyObjectsToNewFolder(bucketName, items, oldFolderName, newFolderName, pathFile);
+        removeOldObjects(bucketName, items, oldFolderName);
+    }
+
+    @SneakyThrows
+    private List<Item> getObjectsInFolder(String bucketName, String folderName) {
         List<Item> items = new ArrayList<>();
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
-                        .prefix(oldFolderName)
+                        .prefix(folderName)
                         .recursive(true)
                         .build()
         );
@@ -32,7 +39,11 @@ public class UpdateFolderService {
         for (Result<Item> result : results) {
             items.add(result.get());
         }
+        return items;
+    }
 
+    @SneakyThrows
+    private void copyObjectsToNewFolder(String bucketName, List<Item> items, String oldFolderName, String newFolderName, String pathFile) {
         for (Item item : items) {
             String oldObjectName = item.objectName();
             if (oldObjectName.startsWith(oldFolderName)) {
@@ -48,7 +59,10 @@ public class UpdateFolderService {
                 );
             }
         }
+    }
 
+    @SneakyThrows
+    private void removeOldObjects(String bucketName, List<Item> items, String oldFolderName) {
         for (Item item : items) {
             String oldObjectName = item.objectName();
             if (oldObjectName.startsWith(oldFolderName)) {
