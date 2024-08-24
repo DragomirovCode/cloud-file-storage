@@ -25,7 +25,7 @@ public class UploadService {
     }
 
     @SneakyThrows
-    public void uploadFile(String bucketName, String objectName, InputStream fileStream) {
+    private void uploadFile(String bucketName, String objectName, InputStream fileStream) {
         String folderPath = extractFolderPath(objectName);
 
         if (!keepFileExists(bucketName, folderPath)) {
