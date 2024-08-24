@@ -4,14 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
 public class DeleteFolderController {
     private final DeleteFolderService deleteFolderService;
+    private final PathUtil pathUtil;
 
     @Autowired
-    public DeleteFolderController(DeleteFolderService deleteFolderService) {
+    public DeleteFolderController(DeleteFolderService deleteFolderService, PathUtil pathUtil) {
         this.deleteFolderService = deleteFolderService;
+        this.pathUtil = pathUtil;
     }
 
 
@@ -21,21 +24,7 @@ public class DeleteFolderController {
             @RequestParam(name = "path", required = false) String path
     ) {
 
-        if (path == null) {
-            path = "";
-        } else {
-            path = path.trim();
-            if (path.startsWith("[") && path.endsWith("]")) {
-                path = path.substring(1, path.length() - 1);
-            }
-        }
-
-        if (!path.isEmpty() && !path.endsWith("/")) {
-            path += "/";
-        }
-
-        path = path.replaceAll("\\s+", "");
-        path = path.replace(",", "/");
+        path = pathUtil.clearPath(path);
 
         deleteFolderService.deleteFolder(bucketName, path);
 
