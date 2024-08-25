@@ -52,6 +52,8 @@ public class PathUtil {
         Path pathFile = Paths.get(objectName);
         String endFileName = pathFile.getFileName().toString();
 
+        endFileName = endFileName.replace("\\", "/");
+
         return downloadsDir + File.separator + endFileName;
     }
 
