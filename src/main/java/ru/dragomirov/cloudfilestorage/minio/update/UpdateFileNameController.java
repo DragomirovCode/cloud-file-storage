@@ -7,16 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.dragomirov.cloudfilestorage.minio.FileUtil;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
 public class UpdateFileNameController {
     private final UpdateFileService updateFileService;
     private final FileUtil fileUtil;
+    private final PathUtil pathUtil;
 
     @Autowired
-    public UpdateFileNameController(UpdateFileService updateFileService, FileUtil fileUtil) {
+    public UpdateFileNameController(UpdateFileService updateFileService, FileUtil fileUtil, PathUtil pathUtil) {
         this.updateFileService = updateFileService;
         this.fileUtil = fileUtil;
+        this.pathUtil = pathUtil;
     }
 
     @GetMapping("/pattern-update-name-file")
@@ -39,6 +42,8 @@ public class UpdateFileNameController {
             @RequestParam(name = "newObjectName") String newObjectName,
             @RequestParam(name = "path") String path
     ) {
+        path = pathUtil.clearPath(path);
+
         String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, newObjectName);
 
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
