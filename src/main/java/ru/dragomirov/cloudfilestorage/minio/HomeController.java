@@ -40,7 +40,7 @@ public class HomeController {
 
         boolean isEmptyPath = pathUtil.isEmptyPath(folderNames);
 
-        String childPaths = pathUtil.clearPath(getFolderNamesForPath(path).toString());
+        String childPaths = String.join("/", getFolderNamesForPath(path));
 
         model.addAttribute("isEmptyPath", isEmptyPath);
         model.addAttribute("objects", objectNames);
