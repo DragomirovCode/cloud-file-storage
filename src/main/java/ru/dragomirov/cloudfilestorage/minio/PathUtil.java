@@ -77,6 +77,9 @@ public class PathUtil {
             parent = Paths.get("");
         }
 
-        return String.valueOf(parent);
+        String resultPath = String.valueOf(parent);
+        resultPath = resultPath.replace("\\", "/");
+
+        return resultPath;
     }
 }
