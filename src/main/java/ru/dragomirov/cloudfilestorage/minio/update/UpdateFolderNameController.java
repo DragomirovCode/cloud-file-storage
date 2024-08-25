@@ -39,6 +39,8 @@ public class UpdateFolderNameController {
             @RequestParam(name = "newObjectName") String newObjectName,
             @RequestParam(name = "path") String path
     ) {
+        path = pathUtil.clearPath(path);
+
         String parent = pathUtil.getParentPathSafe(objectName);
 
         updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent);
