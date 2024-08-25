@@ -3,6 +3,9 @@ package ru.dragomirov.cloudfilestorage.minio;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -12,14 +15,19 @@ public class PathUtil {
     public String clearPath(String path) {
         if (path == null) {
             return "";
-        } else {
-            path = path.trim();
-            if (path.startsWith("[") && path.endsWith("]")) {
-                path = path.substring(1, path.length() - 1);
-            }
         }
 
-        path = path.replaceAll("\\s+", "");
+        try {
+            path = URLDecoder.decode(path, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        path = path.trim();
+        if (path.startsWith("[") && path.endsWith("]")) {
+            path = path.substring(1, path.length() - 1);
+        }
+
         path = path.replace(",", "/");
 
         if (!path.isEmpty() && !path.endsWith("/")) {
