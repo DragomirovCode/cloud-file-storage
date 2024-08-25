@@ -2,21 +2,17 @@ package ru.dragomirov.cloudfilestorage.minio.update;
 
 import io.minio.*;
 import io.minio.messages.Item;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateFolderService {
     private final MinioClient minioClient;
-
-    @Autowired
-    public UpdateFolderService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
 
     @SneakyThrows
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {

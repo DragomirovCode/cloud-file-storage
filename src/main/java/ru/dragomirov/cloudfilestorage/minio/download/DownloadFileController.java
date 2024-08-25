@@ -1,22 +1,17 @@
 package ru.dragomirov.cloudfilestorage.minio.download;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
+@RequiredArgsConstructor
 public class DownloadFileController {
     private final DownloadFileService downloadFileService;
     private final PathUtil pathUtil;
-
-    @Autowired
-    public DownloadFileController(DownloadFileService downloadFileService, PathUtil pathUtil) {
-        this.downloadFileService = downloadFileService;
-        this.pathUtil = pathUtil;
-    }
 
     @SneakyThrows
     @GetMapping("/download-file")

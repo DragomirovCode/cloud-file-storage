@@ -1,6 +1,6 @@
 package ru.dragomirov.cloudfilestorage.minio.update;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,17 +10,11 @@ import ru.dragomirov.cloudfilestorage.minio.FileUtil;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
+@RequiredArgsConstructor
 public class UpdateFileNameController {
     private final UpdateFileService updateFileService;
     private final FileUtil fileUtil;
     private final PathUtil pathUtil;
-
-    @Autowired
-    public UpdateFileNameController(UpdateFileService updateFileService, FileUtil fileUtil, PathUtil pathUtil) {
-        this.updateFileService = updateFileService;
-        this.fileUtil = fileUtil;
-        this.pathUtil = pathUtil;
-    }
 
     @GetMapping("/pattern-update-name-file")
     public String get(

@@ -2,21 +2,17 @@ package ru.dragomirov.cloudfilestorage.minio.create;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Service
+@RequiredArgsConstructor
 public class CreateFolderService {
     private final MinioClient minioClient;
-
-    @Autowired
-    public CreateFolderService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
 
     @SneakyThrows
     public void createFolder(String bucketName, String folderName, String path) {

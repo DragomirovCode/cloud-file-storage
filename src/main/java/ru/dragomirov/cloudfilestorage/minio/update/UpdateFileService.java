@@ -4,18 +4,14 @@ import io.minio.CopyObjectArgs;
 import io.minio.CopySource;
 import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateFileService {
     private final MinioClient minioClient;
-
-    @Autowired
-    public UpdateFileService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
 
     public void updateFile(String bucketName, String oldObjectName, String newObjectName) {
         copyObject(bucketName, oldObjectName, newObjectName);

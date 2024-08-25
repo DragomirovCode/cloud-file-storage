@@ -1,6 +1,6 @@
 package ru.dragomirov.cloudfilestorage.minio.upload;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,15 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 @Controller
+@RequiredArgsConstructor
 public class UploadFolderController {
     private final UploadService uploadService;
     private final PathUtil pathUtil;
-
-    @Autowired
-    public UploadFolderController(UploadService uploadService, PathUtil pathUtil) {
-        this.uploadService = uploadService;
-        this.pathUtil = pathUtil;
-    }
 
     @PostMapping("/upload-folder")
     public String post(

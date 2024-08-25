@@ -2,8 +2,8 @@ package ru.dragomirov.cloudfilestorage.minio.download;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -11,16 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
+@RequiredArgsConstructor
 public class DownloadFileService {
     private final MinioClient minioClient;
 
-    @Autowired
-    public DownloadFileService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
-
     @SneakyThrows
-    private InputStream getFileStream(String bucketName, String objectName){
+    private InputStream getFileStream(String bucketName, String objectName) {
         return minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)

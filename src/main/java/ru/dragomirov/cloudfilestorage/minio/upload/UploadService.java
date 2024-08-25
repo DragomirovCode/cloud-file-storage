@@ -5,8 +5,8 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,13 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UploadService {
     private final MinioClient minioClient;
-
-    @Autowired
-    public UploadService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
 
     @SneakyThrows
     private void uploadFile(String bucketName, String objectName, InputStream fileStream) {

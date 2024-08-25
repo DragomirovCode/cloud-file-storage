@@ -5,21 +5,17 @@ import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DeleteFolderService {
     private final MinioClient minioClient;
-
-    @Autowired
-    public DeleteFolderService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
 
     public void deleteFolder(String bucketName, String folderPrefix) {
         List<String> objectsToDelete = listObjectsInFolder(bucketName, folderPrefix);

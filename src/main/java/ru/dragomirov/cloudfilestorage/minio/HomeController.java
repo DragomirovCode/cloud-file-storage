@@ -1,8 +1,8 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.messages.Item;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +14,10 @@ import static ru.dragomirov.cloudfilestorage.minio.Breadcrumbs.getBreadcrumbLink
 import static ru.dragomirov.cloudfilestorage.minio.Breadcrumbs.getFolderNamesForPath;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
     private final GetListObjectService getListObjectService;
     private final PathUtil pathUtil;
-
-    @Autowired
-    public HomeController(GetListObjectService getListObjectService, PathUtil pathUtil) {
-        this.getListObjectService = getListObjectService;
-        this.pathUtil = pathUtil;
-    }
 
     @SneakyThrows
     @GetMapping("/")
