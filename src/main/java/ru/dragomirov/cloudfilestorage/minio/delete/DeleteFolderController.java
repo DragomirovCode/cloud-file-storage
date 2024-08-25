@@ -17,7 +17,6 @@ public class DeleteFolderController {
         this.pathUtil = pathUtil;
     }
 
-
     @DeleteMapping("/delete-folder")
     public String post(
             @RequestParam("bucketName") String bucketName,
