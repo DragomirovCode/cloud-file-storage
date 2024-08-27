@@ -1,9 +1,12 @@
 package ru.dragomirov.cloudfilestorage.minio.update;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.dragomirov.cloudfilestorage.minio.FileUtil;
@@ -26,6 +29,7 @@ public class UpdateFileNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
+        model.addAttribute("minioDto", new MinioDto());
         return "update-file";
     }
 
@@ -33,12 +37,17 @@ public class UpdateFileNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
-            @RequestParam(name = "newObjectName") String newObjectName,
+            @Valid @ModelAttribute("minioDto") MinioDto minioDto,
+            BindingResult bindingResult,
             @RequestParam(name = "path") String path
     ) {
+        if (bindingResult.hasErrors()) {
+            return "update-file";
+        }
+
         path = pathUtil.clearPath(path);
 
-        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, newObjectName);
+        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, minioDto.getFile());
 
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
