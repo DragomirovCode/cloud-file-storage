@@ -1,9 +1,8 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.exception;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
