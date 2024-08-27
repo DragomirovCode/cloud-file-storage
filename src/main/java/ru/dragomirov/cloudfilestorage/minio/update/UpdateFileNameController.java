@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.dragomirov.cloudfilestorage.minio.FileUtil;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
+import ru.dragomirov.cloudfilestorage.minio.exception.InvalidParameterException;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,7 +40,8 @@ public class UpdateFileNameController {
             @RequestParam(name = "objectName") String oldObjectName,
             @Valid @ModelAttribute("minioDto") UpdateFileDto updateFileDto,
             BindingResult bindingResult,
-            @RequestParam(name = "path") String path
+            @RequestParam(name = "path") String path,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
             return "update-file";
@@ -47,9 +49,14 @@ public class UpdateFileNameController {
 
         path = pathUtil.clearPath(path);
 
-        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.getFile());
+        try {
+            String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.getFile());
+            updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
+        } catch (InvalidParameterException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "update-file";
+        }
 
-        updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
