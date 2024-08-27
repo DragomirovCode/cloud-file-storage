@@ -29,7 +29,7 @@ public class UpdateFileNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
-        model.addAttribute("minioDto", new UpdateFileDto());
+        model.addAttribute("updateFileDto", new UpdateFileDto());
         return "update-file";
     }
 
@@ -37,18 +37,21 @@ public class UpdateFileNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
-            @Valid @ModelAttribute("minioDto") UpdateFileDto updateFileDto,
+            @Valid @ModelAttribute("updateFileDto") UpdateFileDto updateFileDto,
             BindingResult bindingResult,
-            @RequestParam(name = "path") String path
+            @RequestParam(name = "path") String path,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
+            model.addAttribute("bucketName", bucketName);
+            model.addAttribute("objectName", oldObjectName);
+            model.addAttribute("childPaths", path);
             return "update-file";
         }
 
         path = pathUtil.clearPath(path);
 
-        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.getFile());
+        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.file);
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
 
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
