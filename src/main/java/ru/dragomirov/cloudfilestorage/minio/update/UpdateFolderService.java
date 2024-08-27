@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class UpdateFolderService {
     @SneakyThrows
     @Transactional
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
+        validateFolderName(oldFolderName, newFolderName + "/");
         List<Item> items = getObjectsInFolder(bucketName, oldFolderName);
         copyObjectsToNewFolder(bucketName, items, oldFolderName, newFolderName, pathFile);
         removeOldObjects(bucketName, items, oldFolderName);
@@ -68,6 +71,12 @@ public class UpdateFolderService {
                         RemoveObjectArgs.builder().bucket(bucketName).object(oldObjectName).build()
                 );
             }
+        }
+    }
+
+    private void validateFolderName(String oldObjectName, String newObjectName) {
+        if (Objects.equals(oldObjectName, newObjectName)) {
+            throw new DuplicateItemException("New folder name cannot be the same as the old folder name");
         }
     }
 }
