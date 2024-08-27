@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class MinioDto {
+public class UpdateFileDto {
 
     @NotNull(message = "The file name should not be null")
     @NotEmpty(message = "The file name should not be empty")

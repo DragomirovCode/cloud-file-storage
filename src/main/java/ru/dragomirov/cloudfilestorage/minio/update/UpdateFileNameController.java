@@ -29,7 +29,7 @@ public class UpdateFileNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
-        model.addAttribute("minioDto", new MinioDto());
+        model.addAttribute("minioDto", new UpdateFileDto());
         return "update-file";
     }
 
@@ -37,7 +37,7 @@ public class UpdateFileNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
-            @Valid @ModelAttribute("minioDto") MinioDto minioDto,
+            @Valid @ModelAttribute("minioDto") UpdateFileDto updateFileDto,
             BindingResult bindingResult,
             @RequestParam(name = "path") String path
     ) {
@@ -47,7 +47,7 @@ public class UpdateFileNameController {
 
         path = pathUtil.clearPath(path);
 
-        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, minioDto.getFile());
+        String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.getFile());
 
         updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
