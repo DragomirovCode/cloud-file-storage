@@ -1,7 +1,7 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
 import org.springframework.stereotype.Component;
-import ru.dragomirov.cloudfilestorage.minio.exception.InvalidParameterException;
+import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +34,7 @@ public class FileUtil {
 
     private void validateFileName(String oldObjectName, String newObjectName) {
         if (!Objects.equals(oldObjectName, newObjectName)) {
-            throw new InvalidParameterException("New file name cannot be the same as the old file name");
+            throw new DuplicateItemException("New file name cannot be the same as the old file name");
         }
     }
 }
