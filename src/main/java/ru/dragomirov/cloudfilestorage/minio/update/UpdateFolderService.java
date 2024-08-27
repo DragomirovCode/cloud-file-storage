@@ -5,6 +5,7 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class UpdateFolderService {
     private final MinioClient minioClient;
 
     @SneakyThrows
+    @Transactional
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
         List<Item> items = getObjectsInFolder(bucketName, oldFolderName);
         copyObjectsToNewFolder(bucketName, items, oldFolderName, newFolderName, pathFile);

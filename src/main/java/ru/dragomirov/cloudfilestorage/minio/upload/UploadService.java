@@ -8,6 +8,7 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -87,6 +88,7 @@ public class UploadService {
     }
 
    @SneakyThrows
+   @Transactional
    public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
        for (MultipartFile file : files) {
 

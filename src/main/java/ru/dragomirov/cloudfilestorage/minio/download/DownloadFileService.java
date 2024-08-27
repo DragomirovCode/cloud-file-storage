@@ -5,6 +5,7 @@ import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class DownloadFileService {
         }
     }
 
+    @Transactional
     public void downloadFile(String bucketName, String objectName, String destinationFilePath) throws IOException {
         try (InputStream stream = getFileStream(bucketName, objectName)) {
             saveFileFromStream(stream, destinationFilePath);

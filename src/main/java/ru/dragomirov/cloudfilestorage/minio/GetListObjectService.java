@@ -6,6 +6,7 @@ import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class GetListObjectService {
     private final MinioClient minioClient;
 
+    @Transactional(readOnly = true)
     public List<Item> listObjects(String bucketName, String path) throws Exception {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()

@@ -8,6 +8,7 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class DeleteFolderService {
     private final MinioClient minioClient;
 
+    @Transactional
     public void deleteFolder(String bucketName, String folderPrefix) {
         List<String> objectsToDelete = listObjectsInFolder(bucketName, folderPrefix);
         if (!objectsToDelete.isEmpty()) {

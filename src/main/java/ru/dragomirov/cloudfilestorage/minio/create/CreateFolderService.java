@@ -5,6 +5,7 @@ import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ public class CreateFolderService {
     private final MinioClient minioClient;
 
     @SneakyThrows
+    @Transactional
     public void createFolder(String bucketName, String folderName, String path) {
         InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
         String objectName = path + folderName + "/.keep";

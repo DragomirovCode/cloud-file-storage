@@ -7,12 +7,14 @@ import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UpdateFileService {
     private final MinioClient minioClient;
 
+    @Transactional
     public void updateFile(String bucketName, String oldObjectName, String newObjectName) {
         copyObject(bucketName, oldObjectName, newObjectName);
         removeObject(bucketName, oldObjectName);
