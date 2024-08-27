@@ -6,11 +6,12 @@
 </head>
 <body>
 <div class="container my-5 p-5" style="border:1px solid black;">
-    <form class="col-md-4 offset-md-4" th:action="@{/create-new-folder}" method="POST">
+    <form class="col-md-4 offset-md-4" th:action="@{/create-new-folder}" th:object="${minioDto}" method="POST">
 
         <div class="mb-3">
-            <label for="folderName" class="form-label">name for folder: </label>
-            <input type="text" class="form-control" id="folderName" name="folderName">
+            <label for="minioDto" class="form-label">folder name:</label>
+            <input type="text" class="form-control" id="minioDto" th:field="*{folder}">
+            <div style="color: red" th:if="${#fields.hasErrors('folder')}" class="text-danger" th:errors="*{folder}"></div>
             <input type="hidden" name="path" th:value="${childPaths}"/>
         </div>
         <center><button type="submit" class="btn btn-primary">create</button></center>
