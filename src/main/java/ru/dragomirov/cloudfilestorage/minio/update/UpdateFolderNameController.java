@@ -1,9 +1,12 @@
 package ru.dragomirov.cloudfilestorage.minio.update;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
@@ -24,6 +27,7 @@ public class UpdateFolderNameController {
         model.addAttribute("bucketName", bucketName);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
+        model.addAttribute("updateFolderDto", new UpdateFolderDto());
         return "update-folder";
     }
 
@@ -31,14 +35,23 @@ public class UpdateFolderNameController {
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName,
-            @RequestParam(name = "newObjectName") String newObjectName,
-            @RequestParam(name = "path") String path
+            @Valid @ModelAttribute("updateFolderDto") UpdateFolderDto updateFolderDto,
+            BindingResult bindingResult,
+            @RequestParam(name = "path") String path,
+            Model model
     ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("bucketName", bucketName);
+            model.addAttribute("objectName", objectName);
+            model.addAttribute("childPaths", path);
+            return "update-folder";
+        }
+
         path = pathUtil.clearPath(path);
 
         String parent = pathUtil.getParentPathSafe(objectName);
 
-        updateFolderService.updateNameFolder(bucketName, objectName, newObjectName, parent);
+        updateFolderService.updateNameFolder(bucketName, objectName, updateFolderDto.folder, parent);
 
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
