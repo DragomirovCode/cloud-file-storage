@@ -10,7 +10,7 @@ import java.util.Objects;
 @Component
 public class FileUtil {
     public String generateNewFileNameWithExtension(String oldObjectName, String newObjectName) {
-        fileExists(oldObjectName, newObjectName);
+        validateFileName(oldObjectName, newObjectName);
         Path pathFile = Paths.get(oldObjectName);
         String fileExtension = extractFileExtension(pathFile);
         String newFileNameWithExtension = newObjectName + fileExtension;
@@ -32,7 +32,7 @@ public class FileUtil {
         }
     }
 
-    private void fileExists(String oldObjectName, String newObjectName) {
+    private void validateFileName(String oldObjectName, String newObjectName) {
         if (!Objects.equals(oldObjectName, newObjectName)) {
             throw new InvalidParameterException("New file name cannot be the same as the old file name");
         }
