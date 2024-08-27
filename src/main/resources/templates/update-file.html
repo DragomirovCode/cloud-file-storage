@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>update file</title>
 </head>
 <body>
 <div class="container my-5 p-5" style="border:1px solid black;">
-    <form class="col-md-4 offset-md-4" th:action="@{/update-name-file}" th:object="${minioDto}" method="POST">
+    <form class="col-md-4 offset-md-4" th:action="@{/update-name-file}" th:object="${updateFileDto}" method="POST">
         <div class="mb-3">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <label for="file" class="form-label">file name:</label>
-            <input type="text" class="form-control" id="file" th:field="*{file}">
+            <label for="fileName" class="form-label">file name:</label>
+            <input type="text" class="form-control" id="fileName" th:field="*{file}">
             <div style="color: red" th:if="${#fields.hasErrors('file')}" class="text-danger" th:errors="*{file}"></div>
             <input type="hidden" name="bucketName" th:value="${bucketName}"/>
             <input type="hidden" name="objectName" th:value="${objectName}"/>
