@@ -11,5 +11,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error409";
     }
+
+    @ExceptionHandler(InvalidParameterException.class)
+    public String handleInvalidParameterException(InvalidParameterException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error409";
+    }
 }
 
