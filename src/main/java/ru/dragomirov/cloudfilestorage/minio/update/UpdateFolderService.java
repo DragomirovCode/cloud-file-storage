@@ -11,6 +11,7 @@ import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,14 @@ public class UpdateFolderService {
     @SneakyThrows
     @Transactional
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
+        List<String> objectNames = listObjects(bucketName, pathFile).stream()
+                .map(Item::objectName)
+                .collect(Collectors.toList());
+
+        if (objectNames.contains(newFolderName + "/")) {
+            throw new DuplicateItemException("A folder with the same name already exists in the specified path");
+        }
+
         validateFolderName(oldFolderName, newFolderName + "/");
         List<Item> items = getObjectsInFolder(bucketName, oldFolderName);
         copyObjectsToNewFolder(bucketName, items, oldFolderName, newFolderName, pathFile);
@@ -78,5 +87,22 @@ public class UpdateFolderService {
         if (Objects.equals(oldObjectName, newObjectName)) {
             throw new DuplicateItemException("New folder name cannot be the same as the old folder name");
         }
+    }
+
+    @SneakyThrows
+    private List<Item> listObjects(String bucketName, String path){
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(path)
+                        .delimiter("/")
+                        .build()
+        );
+
+        List<Item> objects = new ArrayList<>();
+        for (Result<Item> result : results) {
+            objects.add(result.get());
+        }
+        return objects;
     }
 }
