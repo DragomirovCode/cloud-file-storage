@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.upload.UploadFileDto;
 
 import java.util.List;
 
@@ -44,7 +43,6 @@ public class HomeController {
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("currentPath", getFolderNamesForPath(path));
         model.addAttribute("childPaths", childPaths);
-        model.addAttribute("uploadFileDto", new UploadFileDto());
 
         return "home";
     }
