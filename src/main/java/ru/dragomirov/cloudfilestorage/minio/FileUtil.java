@@ -49,15 +49,16 @@ public class FileUtil {
                 throw new InvalidParameterException("The file cannot be empty");
             }
 
-            if (!fileOriginalFilename.contains(".") || fileOriginalFilename.lastIndexOf('.') == 0) {
-                throw new InvalidParameterException("File must have a valid extension");
-            }
-
             String fileName = fileNameWithoutExtension(fileOriginalFilename);
 
             if (fileName.length() < 3) {
                 throw new InvalidParameterException("File name must be at least 3 characters long");
             }
+
+            if (!fileOriginalFilename.contains(".") || fileOriginalFilename.lastIndexOf('.') == 0) {
+                throw new InvalidParameterException("File must have a valid extension");
+            }
+
             if (!fileName.matches("^[a-zA-Z0-9-]+$")) {
                 throw new InvalidParameterException("File name must contain only English letters, digits, and hyphens");
             }
