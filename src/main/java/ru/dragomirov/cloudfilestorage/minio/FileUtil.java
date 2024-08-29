@@ -45,9 +45,8 @@ public class FileUtil {
             String fileOriginalFilename = file.getOriginalFilename();
 
             assert fileOriginalFilename != null;
-
             if (fileOriginalFilename.isEmpty()) {
-                throw new InvalidParameterException("The folder cannot be empty");
+                throw new InvalidParameterException("The file cannot be empty");
             }
 
             if (!fileOriginalFilename.contains(".") || fileOriginalFilename.lastIndexOf('.') == 0) {
@@ -63,7 +62,27 @@ public class FileUtil {
                 throw new InvalidParameterException("File name must contain only English letters, digits, and hyphens");
             }
         }
+    }
 
+    public void validateFolderName(MultipartFile[] files) {
+        for (MultipartFile file : files) {
+            String fileOriginalFilename = file.getOriginalFilename();
+
+            assert fileOriginalFilename != null;
+            if (fileOriginalFilename.isEmpty()) {
+                throw new InvalidParameterException("The folder cannot be empty");
+            }
+
+            String folderName = folderName(fileOriginalFilename);
+
+            if (folderName.length() < 3) {
+                throw new InvalidParameterException("Folder name must be at least 3 characters long");
+            }
+
+            if (!folderName.matches("^[a-zA-Z0-9-]+$")) {
+                throw new InvalidParameterException("Folder name must contain only English letters, digits, and hyphens");
+            }
+        }
     }
 
     private String fileNameWithoutExtension(String fileOriginalFilename) {
