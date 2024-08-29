@@ -109,8 +109,8 @@ public class UploadService {
 
            String pathFolder = pathUtil.getParentPathSafe(objectName);
            pathFolder = pathFolder + "/";
-           String folderName = fileUtil.folderName(pathFolder);
 
+           String folderName = fileUtil.folderName(pathFolder);
 
            if (objectNames.contains(folderName + "/")) {
                throw new DuplicateItemException("A folder with the same name already exists in the specified path");
