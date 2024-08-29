@@ -61,7 +61,7 @@
     <input type="hidden" name="bucketName" th:value="${bucketName}"/>
     <input type="hidden" name="path" th:value="${childPaths}"/>
     <label for="files">Выберите файлы:</label>
-    <input accept="*" name="files" type="file" id="files" multiple required>
+    <input accept="*" name="files" type="file" id="files" multiple>
     <input type="submit" value="Отправить файлы">
 </form>
 
@@ -73,7 +73,7 @@
     <input type="hidden" name="bucketName" th:value="${bucketName}"/>
     <input type="hidden" name="path" th:value="${childPaths}"/>
     <label for="files">Выберите папку:</label>
-    <input accept="*" name="package-files" type="file" id="package-files" multiple webkitdirectory required>
+    <input accept="*" name="folder-files" type="file" id="package-files" multiple webkitdirectory>
     <input type="submit" value="Отправить файл">
 </form>
 
