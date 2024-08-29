@@ -25,7 +25,7 @@ public class UpdateFileService {
                 .collect(Collectors.toList());
 
         if (objectNames.contains(newObjectName)) {
-            throw new DuplicateItemException("New file name cannot be the same as the old file name");
+            throw new DuplicateItemException("A file with the same name already exists in the specified path");
         }
 
         copyObject(bucketName, oldObjectName, newObjectName);
