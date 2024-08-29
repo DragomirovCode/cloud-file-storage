@@ -93,6 +93,9 @@ public class FileUtil {
     }
 
     public String folderName(String folderName) {
+        if (folderName.equals("/")) {
+            return "";
+        }
         Path path = Paths.get(folderName);
         return path.getParent().getFileName().toString();
     }
