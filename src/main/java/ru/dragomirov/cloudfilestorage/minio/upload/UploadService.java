@@ -10,16 +10,20 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.dragomirov.cloudfilestorage.minio.FileUtil;
+import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UploadService {
     private final MinioClient minioClient;
+    private final FileUtil fileUtil;
 
     @SneakyThrows
     private void uploadFile(String bucketName, String objectName, InputStream fileStream) {
@@ -90,11 +94,24 @@ public class UploadService {
    @SneakyThrows
    @Transactional
    public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
+       List<String> objectNames = listObjects(bucketName, path).stream()
+               .map(Item::objectName)
+               .collect(Collectors.toList());
+
        for (MultipartFile file : files) {
 
            InputStream fileStream = file.getInputStream();
 
            String objectName = path + file.getOriginalFilename();
+           String folderName = fileUtil.folderName(file.getOriginalFilename());
+
+           if (objectNames.contains(folderName + "/")) {
+               throw new DuplicateItemException("A folder with the same name already exists in the specified path");
+           }
+
+           if (objectNames.contains(objectName)) {
+               throw new DuplicateItemException("A file with the same name already exists in the specified path");
+           }
 
            uploadFile(bucketName, objectName, fileStream);
        }
