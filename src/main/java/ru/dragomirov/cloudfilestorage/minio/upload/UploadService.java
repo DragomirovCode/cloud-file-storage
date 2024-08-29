@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.dragomirov.cloudfilestorage.minio.FileUtil;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 
 import java.io.ByteArrayInputStream;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class UploadService {
     private final MinioClient minioClient;
     private final FileUtil fileUtil;
+    private final PathUtil pathUtil;
 
     @SneakyThrows
     private void uploadFile(String bucketName, String objectName, InputStream fileStream) {
@@ -93,6 +95,7 @@ public class UploadService {
 
    @SneakyThrows
    @Transactional
+   // FIXME: 29.08.2024 you need to replace the empty path with the path "home" | the logic of adding files does not work
    public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
        List<String> objectNames = listObjects(bucketName, path).stream()
                .map(Item::objectName)
@@ -103,7 +106,11 @@ public class UploadService {
            InputStream fileStream = file.getInputStream();
 
            String objectName = path + file.getOriginalFilename();
-           String folderName = fileUtil.folderName(file.getOriginalFilename());
+
+           String pathFolder = pathUtil.getParentPathSafe(objectName);
+           pathFolder = pathFolder + "/";
+           String folderName = fileUtil.folderName(pathFolder);
+
 
            if (objectNames.contains(folderName + "/")) {
                throw new DuplicateItemException("A folder with the same name already exists in the specified path");
