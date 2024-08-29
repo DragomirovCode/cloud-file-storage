@@ -52,7 +52,8 @@ public class UpdateFileNameController {
         path = pathUtil.clearPath(path);
 
         String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.file);
-        updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName);
+
+        updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName, path);
 
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
