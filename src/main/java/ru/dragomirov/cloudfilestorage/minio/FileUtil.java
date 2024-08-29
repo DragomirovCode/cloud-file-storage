@@ -1,7 +1,9 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
+import ru.dragomirov.cloudfilestorage.minio.exception.InvalidParameterException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,6 +38,43 @@ public class FileUtil {
         if (Objects.equals(oldObjectName, newObjectName)) {
             throw new DuplicateItemException("New file name cannot be the same as the old file name");
         }
+    }
+
+    public void validateFileName(MultipartFile[] files) {
+        for (MultipartFile file : files) {
+            String fileOriginalFilename = file.getOriginalFilename();
+
+            assert fileOriginalFilename != null;
+
+            if (fileOriginalFilename.isEmpty()) {
+                throw new InvalidParameterException("The folder cannot be empty");
+            }
+
+            if (!fileOriginalFilename.contains(".") || fileOriginalFilename.lastIndexOf('.') == 0) {
+                throw new InvalidParameterException("File must have a valid extension");
+            }
+
+            String fileName = fileNameWithoutExtension(fileOriginalFilename);
+
+            if (fileName.length() < 3) {
+                throw new InvalidParameterException("File name must be at least 3 characters long");
+            }
+            if (!fileName.matches("^[a-zA-Z0-9-]+$")) {
+                throw new InvalidParameterException("File name must contain only English letters, digits, and hyphens");
+            }
+        }
+
+    }
+
+    private String fileNameWithoutExtension(String fileOriginalFilename) {
+        Path path = Paths.get(fileOriginalFilename);
+        String fileName = path.getFileName().toString();
+        return fileName.substring(0, fileName.lastIndexOf('.'));
+    }
+
+    private String folderName(String folderName) {
+        Path path = Paths.get(folderName);
+        return path.getParent().getFileName().toString();
     }
 }
 
