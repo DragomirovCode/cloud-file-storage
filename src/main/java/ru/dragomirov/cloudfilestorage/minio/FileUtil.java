@@ -92,7 +92,7 @@ public class FileUtil {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
-    private String folderName(String folderName) {
+    public String folderName(String folderName) {
         Path path = Paths.get(folderName);
         return path.getParent().getFileName().toString();
     }
