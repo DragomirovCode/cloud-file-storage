@@ -32,6 +32,7 @@ public class UpdateFolderNameController {
     }
 
     @PostMapping("/update-name-folder")
+    // FIXME: 30.08.2024 the problem with naming is when the path is long
     public String post(
             @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName,
