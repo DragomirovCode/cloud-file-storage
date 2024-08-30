@@ -4,18 +4,22 @@ import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.Result;
+import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.dragomirov.cloudfilestorage.minio.FileUtil;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
+import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +31,15 @@ public class UploadService {
     private final FileUtil fileUtil;
     private final PathUtil pathUtil;
 
-    @SneakyThrows
     private void uploadFile(String bucketName, String objectName, InputStream fileStream) {
         String folderPath = extractFolderPath(objectName);
 
         if (!keepFileExists(bucketName, folderPath)) {
-            createKeepFile(bucketName, folderPath);
+            try {
+                createKeepFile(bucketName, folderPath);
+            } catch (Exception e) {
+                throw new MinioOperationException();
+            }
         }
 
         uploadObject(bucketName, objectName, fileStream);
@@ -65,18 +72,22 @@ public class UploadService {
         );
     }
 
-    @SneakyThrows
     private void uploadObject(String bucketName, String objectName, InputStream fileStream) {
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .stream(fileStream, fileStream.available(), -1)
-                        .build()
-        );
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .stream(fileStream, fileStream.available(), -1)
+                            .build()
+            );
+        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            throw new MinioOperationException();
+        }
     }
 
-    @SneakyThrows
     private List<Item> listObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
@@ -88,39 +99,52 @@ public class UploadService {
 
         List<Item> objects = new ArrayList<>();
         for (Result<Item> result : results) {
-            objects.add(result.get());
+            try {
+                objects.add(result.get());
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException e) {
+                throw new MinioOperationException();
+            }
         }
         return objects;
     }
 
-    @SneakyThrows
     @Transactional
     public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
-        List<String> objectNames = listObjects(bucketName, path).stream()
-                .map(Item::objectName)
-                .collect(Collectors.toList());
+        try {
 
-        for (MultipartFile file : files) {
+            List<String> objectNames = listObjects(bucketName, path).stream()
+                    .map(Item::objectName)
+                    .collect(Collectors.toList());
 
-            InputStream fileStream = file.getInputStream();
+            for (MultipartFile file : files) {
 
-            String objectName = path + file.getOriginalFilename();
+                InputStream fileStream;
 
-            String pathFolder = pathUtil.getParentPathSafe(objectName);
+                fileStream = file.getInputStream();
 
-            pathFolder = pathFolder.endsWith("/") ? pathFolder : pathFolder + "/";
+                String objectName = path + file.getOriginalFilename();
 
-            String folderName = fileUtil.folderName(pathFolder);
+                String pathFolder = pathUtil.getParentPathSafe(objectName);
 
-            if (objectNames.contains(folderName + "/")) {
-                throw new DuplicateItemException("A folder with the same name already exists in the specified path");
+                pathFolder = pathFolder.endsWith("/") ? pathFolder : pathFolder + "/";
+
+                String folderName = fileUtil.folderName(pathFolder);
+
+                if (objectNames.contains(folderName + "/")) {
+                    throw new DuplicateItemException("A folder with the same name already exists in the specified path");
+                }
+
+                if (objectNames.contains(objectName)) {
+                    throw new DuplicateItemException("A file with the same name already exists in the specified path");
+                }
+
+                uploadFile(bucketName, objectName, fileStream);
+
             }
-
-            if (objectNames.contains(objectName)) {
-                throw new DuplicateItemException("A file with the same name already exists in the specified path");
-            }
-
-            uploadFile(bucketName, objectName, fileStream);
+        } catch (IOException e) {
+            throw new MinioOperationException();
         }
     }
 }
