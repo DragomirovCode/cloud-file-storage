@@ -96,8 +96,16 @@ public class FileUtil {
         if (folderName.equals("/")) {
             return "";
         }
+
         Path path = Paths.get(folderName);
-        return path.getParent().getFileName().toString();
+        Path parentPath = path.getParent();
+
+        if (parentPath == null) {
+            return path.getFileName().toString();
+        }
+
+        return parentPath.getFileName().toString();
     }
+
 }
 
