@@ -1,13 +1,17 @@
 package ru.dragomirov.cloudfilestorage.minio.update;
 
 import io.minio.*;
+import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
+import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +22,6 @@ import java.util.stream.Collectors;
 public class UpdateFolderService {
     private final MinioClient minioClient;
 
-    @SneakyThrows
     @Transactional
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
         List<String> objectNames = listObjects(bucketName, pathFile).stream()
@@ -35,7 +38,6 @@ public class UpdateFolderService {
         removeOldObjects(bucketName, items, oldFolderName);
     }
 
-    @SneakyThrows
     private List<Item> getObjectsInFolder(String bucketName, String folderName) {
         List<Item> items = new ArrayList<>();
         Iterable<Result<Item>> results = minioClient.listObjects(
@@ -47,12 +49,17 @@ public class UpdateFolderService {
         );
 
         for (Result<Item> result : results) {
-            items.add(result.get());
+            try {
+                items.add(result.get());
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException e) {
+                throw new MinioOperationException();
+            }
         }
         return items;
     }
 
-    @SneakyThrows
     private void copyObjectsToNewFolder(String bucketName, List<Item> items, String oldFolderName, String newFolderName, String pathFile) {
         for (Item item : items) {
             String oldObjectName = item.objectName();
@@ -60,25 +67,36 @@ public class UpdateFolderService {
                 String relativePath = oldObjectName.substring(oldFolderName.length());
                 String newObjectName = pathFile + "/" + newFolderName + "/" + relativePath;
 
-                minioClient.copyObject(
-                        CopyObjectArgs.builder()
-                                .bucket(bucketName)
-                                .object(newObjectName)
-                                .source(CopySource.builder().bucket(bucketName).object(oldObjectName).build())
-                                .build()
-                );
+                try {
+                    minioClient.copyObject(
+                            CopyObjectArgs.builder()
+                                    .bucket(bucketName)
+                                    .object(newObjectName)
+                                    .source(CopySource.builder().bucket(bucketName).object(oldObjectName).build())
+                                    .build()
+                    );
+                } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                         InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                         XmlParserException e) {
+                    throw new MinioOperationException();
+                }
             }
         }
     }
 
-    @SneakyThrows
     private void removeOldObjects(String bucketName, List<Item> items, String oldFolderName) {
         for (Item item : items) {
             String oldObjectName = item.objectName();
             if (oldObjectName.startsWith(oldFolderName)) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder().bucket(bucketName).object(oldObjectName).build()
-                );
+                try {
+                    minioClient.removeObject(
+                            RemoveObjectArgs.builder().bucket(bucketName).object(oldObjectName).build()
+                    );
+                } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                         InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                         XmlParserException e) {
+                    throw new MinioOperationException();
+                }
             }
         }
     }
@@ -89,8 +107,7 @@ public class UpdateFolderService {
         }
     }
 
-    @SneakyThrows
-    private List<Item> listObjects(String bucketName, String path){
+    private List<Item> listObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
@@ -101,7 +118,13 @@ public class UpdateFolderService {
 
         List<Item> objects = new ArrayList<>();
         for (Result<Item> result : results) {
-            objects.add(result.get());
+            try {
+                objects.add(result.get());
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException e) {
+                throw new MinioOperationException();
+            }
         }
         return objects;
     }
