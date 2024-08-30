@@ -40,7 +40,7 @@ public class CreateFolderController {
         }
 
         path = pathUtil.clearPath(path);
-        createFolderService.createFolder(bucketName, createFolderDto.getFolder(), path);
+        createFolderService.createFolder(bucketName, createFolderDto.folder, path);
         return "redirect:/?bucketName=" + bucketName + "&path=" + path;
     }
 }
