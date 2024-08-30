@@ -7,7 +7,6 @@ import io.minio.Result;
 import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
@@ -61,7 +60,6 @@ public class CreateFolderService {
         }
     }
 
-    @SneakyThrows
     private List<Item> listObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
@@ -73,7 +71,13 @@ public class CreateFolderService {
 
         List<Item> objects = new ArrayList<>();
         for (Result<Item> result : results) {
-            objects.add(result.get());
+            try {
+                objects.add(result.get());
+            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                     XmlParserException e) {
+                throw new MinioOperationException();
+            }
         }
         return objects;
     }
