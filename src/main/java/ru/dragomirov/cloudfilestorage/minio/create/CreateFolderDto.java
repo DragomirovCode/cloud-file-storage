@@ -13,6 +13,6 @@ public class CreateFolderDto {
     @NotEmpty(message = "The folder name should not be empty")
     @Size(min = 3, max = 63, message = "The folder name must be between 3 and 63 characters")
     @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "The folder name must contain only English letters, digits, and hyphens")
-    String folder;
+    public String folder;
 
 }
