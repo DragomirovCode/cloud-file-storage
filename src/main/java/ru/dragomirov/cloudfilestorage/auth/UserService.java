@@ -22,7 +22,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
-        return foundUser.orElse(null);
+        return foundUser.orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
