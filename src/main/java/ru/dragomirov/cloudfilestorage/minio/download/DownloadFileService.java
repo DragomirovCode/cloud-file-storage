@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 @RequiredArgsConstructor
 public class DownloadFileService {
+    private static final System.Logger logger = System.getLogger(DownloadFileService.class.getName());
     private final MinioClient minioClient;
 
     private InputStream getFileStream(String bucketName, String objectName) {
@@ -29,6 +30,7 @@ public class DownloadFileService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR, "Error occurred while fetching file stream from Minio", e);
             throw new MinioOperationException();
         }
     }
@@ -41,6 +43,7 @@ public class DownloadFileService {
                 fos.write(buffer, 0, bytesRead);
             }
         } catch (IOException e) {
+            logger.log(System.Logger.Level.ERROR, "Error occurred while saving file to path: " + destinationFilePath, e);
             throw new MinioOperationException();
         }
     }
@@ -50,6 +53,7 @@ public class DownloadFileService {
         try (InputStream stream = getFileStream(bucketName, objectName)) {
             saveFileFromStream(stream, destinationFilePath);
         } catch (IOException e) {
+            logger.log(System.Logger.Level.ERROR, "Error occurred while handling the file stream", e);
             throw new MinioOperationException();
         }
     }

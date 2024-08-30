@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CreateFolderService {
+    private static final System.Logger logger = System.getLogger(CreateFolderService.class.getName());
     private final MinioClient minioClient;
 
     @Transactional
@@ -56,6 +57,7 @@ public class CreateFolderService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | NoSuchAlgorithmException | ServerException | XmlParserException |
                  IOException e) {
+            logger.log(System.Logger.Level.ERROR, "Error occurred while creating folder in Minio", e);
             throw new MinioOperationException();
         }
     }
@@ -76,6 +78,7 @@ public class CreateFolderService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR, "Error occurred while listing objects in Minio", e);
                 throw new MinioOperationException();
             }
         }

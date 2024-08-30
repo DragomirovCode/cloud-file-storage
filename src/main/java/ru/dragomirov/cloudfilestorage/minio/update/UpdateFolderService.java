@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UpdateFolderService {
+    private static final System.Logger logger = System.getLogger(UpdateFileService.class.getName());
     private final MinioClient minioClient;
 
     @Transactional
@@ -54,6 +55,9 @@ public class UpdateFolderService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Error occurred while listing objects in folder '%s' in bucket '%s'", folderName, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }
@@ -78,6 +82,9 @@ public class UpdateFolderService {
                 } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                          InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                          XmlParserException e) {
+                    logger.log(System.Logger.Level.ERROR,
+                            String.format("Error occurred while copying object '%s' to '%s' in bucket '%s'", oldObjectName, newObjectName, bucketName),
+                            e);
                     throw new MinioOperationException();
                 }
             }
@@ -95,6 +102,9 @@ public class UpdateFolderService {
                 } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                          InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                          XmlParserException e) {
+                    logger.log(System.Logger.Level.ERROR,
+                            String.format("Error occurred while removing object '%s' from bucket '%s'", oldObjectName, bucketName),
+                            e);
                     throw new MinioOperationException();
                 }
             }
@@ -123,6 +133,9 @@ public class UpdateFolderService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Error occurred while listing objects in path '%s' in bucket '%s'", path, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }

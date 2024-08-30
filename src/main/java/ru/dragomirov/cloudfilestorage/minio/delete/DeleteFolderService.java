@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DeleteFolderService {
+    private static final System.Logger logger = System.getLogger(DeleteFileService.class.getName());
     private final MinioClient minioClient;
 
     @Transactional
@@ -47,6 +48,9 @@ public class DeleteFolderService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Error occurred while listing objects in folder '%s' in bucket '%s'", folderPrefix, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
             objectsToDelete.add(item.objectName());
@@ -66,6 +70,9 @@ public class DeleteFolderService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Error occurred while deleting object '%s' from bucket '%s'", objectName, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }

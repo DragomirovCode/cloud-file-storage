@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UpdateFileService {
+    private static final System.Logger logger = System.getLogger(UpdateFileService.class.getName());
     private final MinioClient minioClient;
 
     @Transactional
@@ -29,6 +30,9 @@ public class UpdateFileService {
                     .map(Item::objectName)
                     .collect(Collectors.toList());
         } catch (Exception e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Error occurred while listing objects in path '%s' in bucket '%s'", path, bucketName),
+                    e);
             throw new MinioOperationException();
         }
 
@@ -36,8 +40,15 @@ public class UpdateFileService {
             throw new DuplicateItemException("A file with the same name already exists in the specified path");
         }
 
-        copyObject(bucketName, oldObjectName, newObjectName);
-        removeObject(bucketName, oldObjectName);
+        try {
+            copyObject(bucketName, oldObjectName, newObjectName);
+            removeObject(bucketName, oldObjectName);
+        } catch (Exception e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Error occurred while updating file '%s' to '%s' in bucket '%s'", oldObjectName, newObjectName, bucketName),
+                    e);
+            throw new MinioOperationException();
+        }
     }
 
     private void copyObject(String bucketName, String sourceObjectName, String destinationObjectName) {
@@ -57,6 +68,9 @@ public class UpdateFileService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Error occurred while copying object '%s' to '%s' in bucket '%s'", sourceObjectName, destinationObjectName, bucketName),
+                    e);
             throw new MinioOperationException();
         }
     }
@@ -72,6 +86,9 @@ public class UpdateFileService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Error occurred while removing object '%s' from bucket '%s'", objectName, bucketName),
+                    e);
             throw new MinioOperationException();
         }
     }
@@ -92,6 +109,9 @@ public class UpdateFileService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Error occurred while listing objects in path '%s' in bucket '%s'", path, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }

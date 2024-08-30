@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UploadService {
+    private static final System.Logger logger = System.getLogger(UploadService.class.getName());
     private final MinioClient minioClient;
     private final FileUtil fileUtil;
     private final PathUtil pathUtil;
@@ -38,6 +39,9 @@ public class UploadService {
             try {
                 createKeepFile(bucketName, folderPath);
             } catch (Exception e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Failed to create .keep file for folder '%s' in bucket '%s'", folderPath, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }
@@ -60,16 +64,23 @@ public class UploadService {
         return false;
     }
 
-    private void createKeepFile(String bucketName, String folderPath) throws Exception {
+    private void createKeepFile(String bucketName, String folderPath) {
         InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
         String keepFileName = folderPath + ".keep";
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(keepFileName)
-                        .stream(keepFileStream, 0, -1)
-                        .build()
-        );
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(keepFileName)
+                            .stream(keepFileStream, 0, -1)
+                            .build()
+            );
+        } catch (Exception e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Failed to create .keep file '%s' in bucket '%s'", keepFileName, bucketName),
+                    e);
+            throw new MinioOperationException();
+        }
     }
 
     private void uploadObject(String bucketName, String objectName, InputStream fileStream) {
@@ -84,6 +95,9 @@ public class UploadService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Failed to upload object '%s' to bucket '%s'", objectName, bucketName),
+                    e);
             throw new MinioOperationException();
         }
     }
@@ -104,6 +118,9 @@ public class UploadService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR,
+                        String.format("Failed to list objects in path '%s' in bucket '%s'", path, bucketName),
+                        e);
                 throw new MinioOperationException();
             }
         }
@@ -144,6 +161,9 @@ public class UploadService {
 
             }
         } catch (IOException e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Failed to process multiple files for path '%s' in bucket '%s'", path, bucketName),
+                    e);
             throw new MinioOperationException();
         }
     }

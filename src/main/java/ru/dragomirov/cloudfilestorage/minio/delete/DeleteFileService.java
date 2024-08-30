@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 @Service
 @RequiredArgsConstructor
 public class DeleteFileService {
+    private static final System.Logger logger = System.getLogger(DeleteFileService.class.getName());
     private final MinioClient minioClient;
 
     @Transactional
@@ -29,6 +30,9 @@ public class DeleteFileService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR,
+                    String.format("Error occurred while deleting file '%s' from bucket '%s'", objectName, bucketName),
+                    e);
             throw new MinioOperationException();
         }
     }
