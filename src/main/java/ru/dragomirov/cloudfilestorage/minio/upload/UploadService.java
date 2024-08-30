@@ -42,7 +42,7 @@ public class UploadService {
         return objectName.substring(0, objectName.lastIndexOf('/') + 1);
     }
 
-    private boolean keepFileExists(String bucketName, String folderPath){
+    private boolean keepFileExists(String bucketName, String folderPath) {
         List<Item> objectsInPath = listObjects(bucketName, folderPath);
 
         for (Item item : objectsInPath) {
@@ -93,34 +93,34 @@ public class UploadService {
         return objects;
     }
 
-   @SneakyThrows
-   @Transactional
-   // FIXME: 29.08.2024 you need to replace the empty path with the path "home" | the logic of adding files does not work
-   public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
-       List<String> objectNames = listObjects(bucketName, path).stream()
-               .map(Item::objectName)
-               .collect(Collectors.toList());
+    @SneakyThrows
+    @Transactional
+    public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
+        List<String> objectNames = listObjects(bucketName, path).stream()
+                .map(Item::objectName)
+                .collect(Collectors.toList());
 
-       for (MultipartFile file : files) {
+        for (MultipartFile file : files) {
 
-           InputStream fileStream = file.getInputStream();
+            InputStream fileStream = file.getInputStream();
 
-           String objectName = path + file.getOriginalFilename();
+            String objectName = path + file.getOriginalFilename();
 
-           String pathFolder = pathUtil.getParentPathSafe(objectName);
-           pathFolder = pathFolder + "/";
+            String pathFolder = pathUtil.getParentPathSafe(objectName);
 
-           String folderName = fileUtil.folderName(pathFolder);
+            pathFolder = pathFolder.endsWith("/") ? pathFolder : pathFolder + "/";
 
-           if (objectNames.contains(folderName + "/")) {
-               throw new DuplicateItemException("A folder with the same name already exists in the specified path");
-           }
+            String folderName = fileUtil.folderName(pathFolder);
 
-           if (objectNames.contains(objectName)) {
-               throw new DuplicateItemException("A file with the same name already exists in the specified path");
-           }
+            if (objectNames.contains(folderName + "/")) {
+                throw new DuplicateItemException("A folder with the same name already exists in the specified path");
+            }
 
-           uploadFile(bucketName, objectName, fileStream);
-       }
-   }
+            if (objectNames.contains(objectName)) {
+                throw new DuplicateItemException("A file with the same name already exists in the specified path");
+            }
+
+            uploadFile(bucketName, objectName, fileStream);
+        }
+    }
 }
