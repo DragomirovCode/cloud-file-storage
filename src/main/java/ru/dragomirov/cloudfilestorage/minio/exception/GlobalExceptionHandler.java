@@ -17,5 +17,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error409";
     }
+
+    @ExceptionHandler(MinioOperationException.class)
+    public String handleMinioOperationParameterException(MinioOperationException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error410";
+    }
 }
 
