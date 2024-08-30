@@ -2,30 +2,37 @@ package ru.dragomirov.cloudfilestorage.minio.download;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
 public class DownloadFileService {
     private final MinioClient minioClient;
 
-    @SneakyThrows
     private InputStream getFileStream(String bucketName, String objectName) {
-        return minioClient.getObject(
-                GetObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .build());
+        try {
+            return minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build());
+        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            throw new MinioOperationException();
+        }
     }
 
-    @SneakyThrows
     private void saveFileFromStream(InputStream stream, String destinationFilePath) {
         try (FileOutputStream fos = new FileOutputStream(destinationFilePath)) {
             byte[] buffer = new byte[8192];
@@ -33,13 +40,17 @@ public class DownloadFileService {
             while ((bytesRead = stream.read(buffer)) != -1) {
                 fos.write(buffer, 0, bytesRead);
             }
+        } catch (IOException e) {
+            throw new MinioOperationException();
         }
     }
 
     @Transactional
-    public void downloadFile(String bucketName, String objectName, String destinationFilePath) throws IOException {
+    public void downloadFile(String bucketName, String objectName, String destinationFilePath) {
         try (InputStream stream = getFileStream(bucketName, objectName)) {
             saveFileFromStream(stream, destinationFilePath);
+        } catch (IOException e) {
+            throw new MinioOperationException();
         }
     }
 }

@@ -1,7 +1,6 @@
 package ru.dragomirov.cloudfilestorage.minio.download;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +12,6 @@ public class DownloadFileController {
     private final DownloadFileService downloadFileService;
     private final PathUtil pathUtil;
 
-    @SneakyThrows
     @GetMapping("/download-file")
     String get(
             @RequestParam(name = "bucketName") String bucketName,
