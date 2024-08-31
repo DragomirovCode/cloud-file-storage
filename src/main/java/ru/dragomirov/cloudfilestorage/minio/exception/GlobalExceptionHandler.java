@@ -3,7 +3,6 @@ package ru.dragomirov.cloudfilestorage.minio.exception;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.dragomirov.cloudfilestorage.auth.UserNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,11 +23,4 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error410";
     }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public String handeUserParameter(UserNotFoundException ex, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
-        return "error411";
-    }
 }
-
