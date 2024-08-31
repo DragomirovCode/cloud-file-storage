@@ -15,18 +15,18 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public List<User> findAll() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public User findById(Long id) {
+    public User getByById(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
+    public Optional<User> getByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
