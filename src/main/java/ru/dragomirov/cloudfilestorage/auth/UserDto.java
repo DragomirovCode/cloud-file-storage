@@ -11,7 +11,7 @@ public class UserDto {
 
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    public String userName;
+    public String username;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 1, message = "Password must be at least 1 characters long")
