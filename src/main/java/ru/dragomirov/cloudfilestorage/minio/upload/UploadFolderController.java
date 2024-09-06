@@ -1,6 +1,7 @@
 package ru.dragomirov.cloudfilestorage.minio.upload;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,19 +18,22 @@ public class UploadFolderController {
 
     @PostMapping("/upload-folder")
     public String post(
-            @RequestParam(name = "bucketName", defaultValue = "home") String bucketName,
             @RequestParam(name = "path", required = false) String path,
-            @RequestParam(name = "folder-files") MultipartFile[] files
+            @RequestParam(name = "folder-files") MultipartFile[] files,
+            Authentication authentication
     ) {
 
         path = pathUtil.clearPath(path);
+
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
 
         fileUtil.validateFolderName(files);
 
         fileUtil.validateFileName(files);
 
-        uploadService.uploadMultipleFiles(files, path, bucketName);
+        uploadService.uploadMultipleFiles(files, path, bucketNameHome);
 
-        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
+        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
     }
 }

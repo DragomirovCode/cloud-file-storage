@@ -2,6 +2,7 @@ package ru.dragomirov.cloudfilestorage.minio.update;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,15 +36,19 @@ public class UpdateFileNameController {
 
     @PostMapping("/update-name-file")
     public String post(
-            @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String oldObjectName,
             @Valid @ModelAttribute("updateFileDto") UpdateFileDto updateFileDto,
             BindingResult bindingResult,
             @RequestParam(name = "path") String path,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
+
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("bucketName", bucketName);
+            model.addAttribute("bucketName", bucketNameHome);
             model.addAttribute("objectName", oldObjectName);
             model.addAttribute("childPaths", path);
             return "update-file";
@@ -53,8 +58,8 @@ public class UpdateFileNameController {
 
         String allNewObjectName = fileUtil.generateNewFileNameWithExtension(oldObjectName, updateFileDto.file);
 
-        updateFileService.updateFile(bucketName, oldObjectName, allNewObjectName, path);
+        updateFileService.updateFile(bucketNameHome, oldObjectName, allNewObjectName, path);
 
-        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
+        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
     }
 }

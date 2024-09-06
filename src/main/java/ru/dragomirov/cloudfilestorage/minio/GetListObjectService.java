@@ -1,12 +1,11 @@
 package ru.dragomirov.cloudfilestorage.minio;
 
-import io.minio.ListObjectsArgs;
-import io.minio.MinioClient;
-import io.minio.Result;
+import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dragomirov.cloudfilestorage.minio.create.CreateUserBucketService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GetListObjectService {
     private final MinioClient minioClient;
+    private final CreateUserBucketService createUserBucketService;
 
     @Transactional(readOnly = true)
     public List<Item> listObjects(String bucketName, String path) throws Exception {
+        createUserBucketService.createUserBucket(bucketName);
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

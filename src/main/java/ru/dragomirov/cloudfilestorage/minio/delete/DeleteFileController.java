@@ -1,6 +1,7 @@
 package ru.dragomirov.cloudfilestorage.minio.delete;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +14,18 @@ public class DeleteFileController {
     private final PathUtil pathUtil;
 
     @DeleteMapping("/delete-file")
-    public String deleteFile(@RequestParam("bucketName") String bucketName,
-                             @RequestParam(name = "path", required = false) String path,
-                             @RequestParam("objectName") String objectName) {
+    public String deleteFile(
+            @RequestParam(name = "path", required = false) String path,
+            @RequestParam("objectName") String objectName,
+            Authentication authentication) {
 
         path = pathUtil.clearPath(path);
 
-        deleteFileService.deleteFile(bucketName, objectName);
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
 
-        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
+        deleteFileService.deleteFile(bucketNameHome, objectName);
+
+        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
     }
 }

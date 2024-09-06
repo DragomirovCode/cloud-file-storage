@@ -2,6 +2,7 @@ package ru.dragomirov.cloudfilestorage.minio.update;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,15 +35,19 @@ public class UpdateFolderNameController {
     @PostMapping("/update-name-folder")
     // FIXME: 30.08.2024 the problem with naming is when the path is long
     public String post(
-            @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "objectName") String objectName,
             @Valid @ModelAttribute("updateFolderDto") UpdateFolderDto updateFolderDto,
             BindingResult bindingResult,
             @RequestParam(name = "path") String path,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
+
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("bucketName", bucketName);
+            model.addAttribute("bucketName", bucketNameHome);
             model.addAttribute("objectName", objectName);
             model.addAttribute("childPaths", path);
             return "update-folder";
@@ -52,8 +57,8 @@ public class UpdateFolderNameController {
 
         String parent = pathUtil.getParentPathSafe(objectName);
 
-        updateFolderService.updateNameFolder(bucketName, objectName, updateFolderDto.folder, parent);
+        updateFolderService.updateNameFolder(bucketNameHome, objectName, updateFolderDto.folder, parent);
 
-        return "redirect:/?bucketName=" + bucketName + "&path=" + path;
+        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
     }
 }

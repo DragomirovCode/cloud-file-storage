@@ -46,7 +46,9 @@ public class SecurityConfig {
                         .invalidSessionUrl("/login")
                         .maximumSessions(1)
                         .expiredUrl("/login")
-                );
+                )
+
+                .authenticationProvider(daoAuthenticationProvider());
 
         return http.build();
     }
