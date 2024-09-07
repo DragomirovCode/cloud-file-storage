@@ -101,12 +101,17 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a th:href="@{|/?bucketName=${bucketName}|}">Home</a></li>
+        <!-- Ссылка на домашнюю страницу -->
+        <li class="breadcrumb-item"><a th:href="@{'/?path='}">Home</a></li>
+
+        <!-- Хлебные крошки для пути -->
         <li th:each="link, iterStat : ${breadcrumbLinks}" class="breadcrumb-item">
-            <a th:href="@{|/?bucketName=${bucketName}&path=${link}|}" th:text="${currentPath[iterStat.index]}"></a>
+            <a th:href="@{'/?path=' + ${link}}" th:text="${currentPath[iterStat.index]}"></a>
         </li>
     </ol>
 </nav>
+
+
 
 <!-- Rest of your HTML code -->
 
@@ -115,10 +120,10 @@
     <td>
         <!-- Если объект - это папка -->
         <span th:if="${objectName.endsWith('/')}">
-            <a th:href="@{|/?bucketName=${bucketName}&path=${objectName}|}" th:text="${objectName}"></a>
+            <a th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
 
             <a class="nav-link text-white"
-               th:href="@{|/pattern-update-name-folder?bucketName=${bucketName}&objectName=${objectName}&path=${childPaths}|}">
+               th:href="@{|/pattern-update-name-folder?objectName=${objectName}&path=${childPaths}|}">
             edit name folder
         </a>
         </span>
@@ -152,7 +157,7 @@
 
             <!-- Ссылка на редактирование имени файла -->
             <a class="nav-link text-white"
-               th:href="@{|/pattern-update-name-file?bucketName=${bucketName}&objectName=${objectName}&path=${childPaths}|}">
+               th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}">
                 edit name file
             </a>
         </span>
