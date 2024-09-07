@@ -2,7 +2,6 @@ package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +19,12 @@ public class HomeController {
     private final GetListObjectService getListObjectService;
     private final PathUtil pathUtil;
 
-    @SneakyThrows
     @GetMapping("/")
     public String getListObjects(
             @RequestParam(name = "path", required = false) String path,
             Model model,
-            Authentication authentication) {
+            Authentication authentication
+    ) {
 
         path = pathUtil.clearPath(path);
 
@@ -44,7 +43,6 @@ public class HomeController {
 
         model.addAttribute("isEmptyPath", isEmptyPath);
         model.addAttribute("objects", objectNames);
-        model.addAttribute("bucketName", bucketNameHome);
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("currentPath", getFolderNamesForPath(path));
         model.addAttribute("childPaths", childPaths);
