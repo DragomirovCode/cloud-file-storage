@@ -28,6 +28,6 @@ public class DeleteFolderController {
 
         path = pathUtil.getPathWithoutLastElement(path);
 
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

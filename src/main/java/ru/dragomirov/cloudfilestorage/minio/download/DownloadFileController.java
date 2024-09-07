@@ -16,7 +16,7 @@ public class DownloadFileController {
     @GetMapping("/download-file")
     String get(
             @RequestParam(name = "objectName") String objectName,
-            @RequestParam(name = "path") String path,
+            @RequestParam(name = "path", required = false) String path,
             Authentication authentication
     ) {
         path = pathUtil.clearPath(path);
@@ -27,6 +27,6 @@ public class DownloadFileController {
         String destinationFilePath = pathUtil.getDownloadsFilePath(objectName);
 
         downloadFileService.downloadFile(bucketNameHome, objectName, destinationFilePath);
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

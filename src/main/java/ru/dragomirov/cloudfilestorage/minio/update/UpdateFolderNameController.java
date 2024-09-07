@@ -20,12 +20,15 @@ public class UpdateFolderNameController {
 
     @GetMapping("/pattern-update-name-folder")
     public String get(
-            @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "path") String path,
             @RequestParam(name = "objectName") String objectName,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
-        model.addAttribute("bucketName", bucketName);
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
+
+        model.addAttribute("bucketName", bucketNameHome);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
         model.addAttribute("updateFolderDto", new UpdateFolderDto());
@@ -59,6 +62,6 @@ public class UpdateFolderNameController {
 
         updateFolderService.updateNameFolder(bucketNameHome, objectName, updateFolderDto.folder, parent);
 
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

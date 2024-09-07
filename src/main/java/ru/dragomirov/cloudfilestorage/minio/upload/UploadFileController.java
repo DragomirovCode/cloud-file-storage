@@ -33,6 +33,6 @@ public class UploadFileController {
 
         uploadService.uploadMultipleFiles(files, path, bucketNameHome);
 
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

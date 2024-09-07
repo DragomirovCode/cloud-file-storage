@@ -33,7 +33,7 @@ public class CreateFolderController {
     public String post(
             @Valid @ModelAttribute("minioDto") CreateFolderDto createFolderDto,
             BindingResult bindingResult,
-            @RequestParam(name = "path") String path,
+            @RequestParam(name = "path", required = false) String path,
             Authentication authentication
     ) {
         if (bindingResult.hasErrors()) {
@@ -46,6 +46,6 @@ public class CreateFolderController {
         String bucketNameHome = "user-" + username;
 
         createFolderService.createFolder(bucketNameHome, createFolderDto.folder, path);
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

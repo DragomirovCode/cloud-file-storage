@@ -17,7 +17,8 @@ public class DeleteFileController {
     public String deleteFile(
             @RequestParam(name = "path", required = false) String path,
             @RequestParam("objectName") String objectName,
-            Authentication authentication) {
+            Authentication authentication
+    ) {
 
         path = pathUtil.clearPath(path);
 
@@ -26,6 +27,6 @@ public class DeleteFileController {
 
         deleteFileService.deleteFile(bucketNameHome, objectName);
 
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }

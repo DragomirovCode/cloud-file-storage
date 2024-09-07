@@ -22,12 +22,16 @@ public class UpdateFileNameController {
 
     @GetMapping("/pattern-update-name-file")
     public String get(
-            @RequestParam(name = "bucketName") String bucketName,
             @RequestParam(name = "path") String path,
             @RequestParam(name = "objectName") String objectName,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
-        model.addAttribute("bucketName", bucketName);
+
+        String username = authentication.getName();
+        String bucketNameHome = "user-" + username;
+
+        model.addAttribute("bucketName", bucketNameHome);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
         model.addAttribute("updateFileDto", new UpdateFileDto());
@@ -39,7 +43,7 @@ public class UpdateFileNameController {
             @RequestParam(name = "objectName") String oldObjectName,
             @Valid @ModelAttribute("updateFileDto") UpdateFileDto updateFileDto,
             BindingResult bindingResult,
-            @RequestParam(name = "path") String path,
+            @RequestParam(name = "path", required = false) String path,
             Model model,
             Authentication authentication
     ) {
@@ -60,6 +64,6 @@ public class UpdateFileNameController {
 
         updateFileService.updateFile(bucketNameHome, oldObjectName, allNewObjectName, path);
 
-        return "redirect:/?bucketName=" + bucketNameHome + "&path=" + path;
+        return "redirect:/?path=" + path;
     }
 }
