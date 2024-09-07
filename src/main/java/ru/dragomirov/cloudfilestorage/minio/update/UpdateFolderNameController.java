@@ -22,13 +22,8 @@ public class UpdateFolderNameController {
     public String get(
             @RequestParam(name = "path") String path,
             @RequestParam(name = "objectName") String objectName,
-            Model model,
-            Authentication authentication
+            Model model
     ) {
-        String username = authentication.getName();
-        String bucketNameHome = "user-" + username;
-
-        model.addAttribute("bucketName", bucketNameHome);
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
         model.addAttribute("updateFolderDto", new UpdateFolderDto());
