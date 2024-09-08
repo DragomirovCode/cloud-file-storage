@@ -2,6 +2,7 @@ package ru.dragomirov.cloudfilestorage.minio;
 
 import io.minio.messages.Item;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,6 +49,7 @@ public class UploadFileTest {
 
     @SneakyThrows
     @Test
+    @DisplayName("process upload should add file in minio")
     void uploadMultipleFiles_shouldAddFile_inMinio() {
         getListObjectService.createUserBucket("user-test");
 
