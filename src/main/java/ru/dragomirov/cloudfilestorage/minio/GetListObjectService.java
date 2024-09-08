@@ -43,7 +43,7 @@ public class GetListObjectService {
         return objects;
     }
 
-    private void createUserBucket(String bucketName) {
+    public void createUserBucket(String bucketName) {
         try {
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
                 minioClient.makeBucket(MakeBucketArgs.builder()

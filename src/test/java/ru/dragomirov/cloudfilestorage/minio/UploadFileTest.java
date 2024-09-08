@@ -49,7 +49,7 @@ public class UploadFileTest {
     @SneakyThrows
     @Test
     void uploadMultipleFiles_shouldAddFile_inMinio() {
-        getListObjectService.listObjects("user-test", "");
+        getListObjectService.createUserBucket("user-test");
 
         String directory = "C:\\Users\\Твой дом\\OneDrive\\Рабочий стол\\test.png";
         File file = new File(directory);
