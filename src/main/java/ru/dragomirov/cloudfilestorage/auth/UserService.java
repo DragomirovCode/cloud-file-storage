@@ -42,9 +42,13 @@ public class UserService {
             @CachePut(value = "UserService::getByUsername", key = "#user.username")}
     )
     public void save(User user) {
-        user.setRole("user");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        try {
+            user.setRole("user");
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new DuplicateUserException();
+        }
     }
 
     @Transactional
