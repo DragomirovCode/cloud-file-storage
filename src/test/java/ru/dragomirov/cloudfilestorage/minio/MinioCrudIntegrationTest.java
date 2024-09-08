@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UpdateTest {
+public class MinioCrudIntegrationTest {
 
     @Autowired
     UploadService uploadService;
