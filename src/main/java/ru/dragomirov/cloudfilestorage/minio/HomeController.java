@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.dragomirov.cloudfilestorage.minio.get.GetFileByNameService;
+import ru.dragomirov.cloudfilestorage.minio.get.GetListObjectService;
 
 import java.util.List;
 
@@ -17,13 +19,15 @@ import static ru.dragomirov.cloudfilestorage.minio.Breadcrumbs.getFolderNamesFor
 @RequiredArgsConstructor
 public class HomeController {
     private final GetListObjectService getListObjectService;
+    private final GetFileByNameService getFileByNameService;
     private final PathUtil pathUtil;
 
     @GetMapping("/")
     public String getListObjects(
             @RequestParam(name = "path", required = false) String path,
             Model model,
-            Authentication authentication
+            Authentication authentication,
+            @RequestParam(name = "fileName", required = false) String fileName
     ) {
 
         path = pathUtil.clearPath(path);
@@ -31,9 +35,19 @@ public class HomeController {
         String username = authentication.getName();
         String bucketNameHome = "user-" + username;
 
-        List<String> objectNames = getListObjectService.listObjects(bucketNameHome, path).stream()
-                .map(Item::objectName)
-                .toList();
+        List<String> objectNames;
+
+        if (fileName != null && !fileName.isEmpty()) {
+            objectNames = getFileByNameService.getObjectByName(bucketNameHome, path, fileName).stream()
+                    .map(Item::objectName)
+                    .toList();
+        } else {
+            objectNames = getListObjectService.listObjects(bucketNameHome, path).stream()
+                    .map(Item::objectName)
+                    .toList();
+        }
+
+        System.out.println("objectNames: " + objectNames);;
 
         List<String> folderNames = getFolderNamesForPath(path.trim());
 
