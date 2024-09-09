@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,17 +24,19 @@ public class GetFileByNameService {
                         .build()
         );
 
+        List<Item> matchingItems = new ArrayList<>();
         for (Result<Item> result : results) {
             try {
                 Item item = result.get();
                 if (item.objectName().equals(fileName)) {
-                    return Collections.singletonList(item);
+                    matchingItems.add(item);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new MinioOperationException();
             }
         }
-        return Collections.emptyList();
+
+        return matchingItems;
     }
 }
