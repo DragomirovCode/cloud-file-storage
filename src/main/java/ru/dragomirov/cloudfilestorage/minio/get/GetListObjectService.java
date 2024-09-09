@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.get;
 
 import io.minio.*;
 import io.minio.errors.*;
