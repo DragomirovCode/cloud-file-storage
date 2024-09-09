@@ -256,21 +256,36 @@
         </div>
     </div>
 
-    <!-- Toggle for Upload -->
     <button class="toggle-button" onclick="document.getElementById('upload-section').style.display = document.getElementById('upload-section').style.display === 'none' ? 'block' : 'none';">
-        Upload Files
+        Upload Files and Folder
     </button>
 
-    <!-- Collapsible section for file upload -->
-    <div id="upload-section" class="toggle-section">
+    <div id="upload-section" class="toggle-section" style="display:none;">
+
         <h2>Upload Files</h2>
         <form enctype="multipart/form-data" action="/upload-files" method="POST">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input type="hidden" name="path" th:value="${childPaths}"/>
+
             <label for="files">Select files:</label>
             <input accept="*" name="files" type="file" id="files" multiple>
+
             <button type="submit" class="btn-action btn-update">Upload Files</button>
         </form>
+
+        </br>
+
+        <h2>Upload Folder</h2>
+        <form enctype="multipart/form-data" action="/upload-folder" method="POST">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="path" th:value="${childPaths}"/>
+
+            <label for="package-files">Select folder:</label>
+            <input accept="*" name="folder-files" type="file" id="package-files" multiple webkitdirectory>
+
+            <button type="submit" class="btn-action btn-update">Upload Folder</button>
+        </form>
+
     </div>
 </div>
 
