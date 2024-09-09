@@ -3,43 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>File Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        label {
-            display: block;
-            font-size: 1rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Fira Sans', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 20px;
         }
 
-        input,
-        label {
-            margin: 0.4rem 0;
-        }
-
-        .delete-button {
-            background-color: rgba(255, 255, 255, 0.60);
-            border-color: rgba(0, 0, 0, 0.50);
-            color: #000000;
-            border-radius: 3px;
-            margin-left: 10px;
-        }
-
-        .delete-button:hover {
-            background-color: #ff4757;
-        }
-
-        .breadcrumb {
-            padding: 8px 15px;
+        h1 {
+            font-weight: 700;
             margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Focus on files and folders */
+        .file-item {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f1f1f1;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+        }
+
+        .file-item a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 500;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Smaller buttons for actions */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-download {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-download:hover {
+            background-color: #218838;
+        }
+
+        .btn-update {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-update:hover {
+            background-color: #0056b3;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
             list-style: none;
-            background-color: #f5f5f5;
-            border-radius: 4px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
 
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">";
-            padding: 0 5px;
+            padding: 0 8px;
             color: #6c757d;
         }
 
@@ -51,114 +121,166 @@
         .breadcrumb-item a:hover {
             text-decoration: underline;
         }
+
+        /* File search form */
+        .file-search {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-search input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .file-search button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-search button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Folder addition section */
+        .folder-actions {
+            margin-bottom: 20px;
+        }
+
+        .folder-actions a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .folder-actions a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Collapsible sections for file/folder actions */
+        .toggle-section {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .toggle-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Files and Folders</h1>
 
-<form th:action="@{/}" method="get">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="fileName" placeholder="search for a file by name..">
-        <input type="hidden" name="path" th:value="${childPaths}"/>
-        <button class="btn btn-outline-secondary" type="submit">search</button>
-    </div>
-</form>
-
-</br>
-
-
-<form enctype="multipart/form-data" action="/upload-files" method="POST">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <input type="hidden" name="path" th:value="${childPaths}"/>
-    <label for="files">select files:</label>
-    <input accept="*" name="files" type="file" id="files" multiple>
-    <input type="submit" value="send files">
-</form>
-
-
-</br>
-
-<form enctype="multipart/form-data" action="/upload-folder" method="POST">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <input type="hidden" name="path" th:value="${childPaths}"/>
-    <label for="files">select a folder:</label>
-    <input accept="*" name="folder-files" type="file" id="package-files" multiple webkitdirectory>
-    <input type="submit" value="send a files">
-</form>
-
-</br>
-
-<a class="nav-link text-white"
-   th:href="@{|/pattern-create-new-folder?path=${childPaths}|}">
-    create new folder
-</a>
-
-</br>
-
-<div th:if="${!isEmptyPath}">
-    <form action="/delete-folder" method="POST" style="display:inline;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <input type="hidden" name="_method" value="DELETE"/>
-        <input type="hidden" name="path" th:value="${childPaths}"/>
-        <button type="submit" class="delete-button">
-            delete folder <i class="fa-solid fa-trash"></i>
-        </button>
+    <!-- File Search -->
+    <form class="file-search" th:action="@{/}" method="get">
+        <input type="text" name="fileName" placeholder="Search for a file by name..." />
+        <input type="hidden" name="path" th:value="${childPaths}" />
+        <button type="submit">Search</button>
     </form>
+
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{'/?path='}">Home</a></li>
+
+            <li th:each="link, iterStat : ${breadcrumbLinks}" class="breadcrumb-item">
+                <a th:href="@{'/?path=' + ${link}}" th:text="${currentPath[iterStat.index]}"></a>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Folder Creation -->
+    <div class="folder-actions">
+        <a th:href="@{|/pattern-create-new-folder?path=${childPaths}|}">Create New Folder</a>
+    </div>
+
+    <!-- File/Folder Listing -->
+    <div th:each="objectName : ${objects}" th:if="${!objectName.endsWith('.keep')}">
+        <div class="file-item">
+            <span>
+                <a th:if="${objectName.endsWith('/')}" th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
+                <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
+            </span>
+
+            <div class="action-buttons">
+                <!-- Delete File -->
+                <form action="/delete-file" method="POST" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="_method" value="DELETE"/>
+                    <input type="hidden" name="path" th:value="${childPaths}"/>
+                    <input type="hidden" name="objectName" th:value="${objectName}"/>
+                    <button type="submit" class="btn-action btn-delete">Delete</button>
+                </form>
+
+                <!-- Download File -->
+                <form action="/download-file" method="GET" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="path" th:value="${childPaths}"/>
+                    <input type="hidden" name="objectName" th:value="${objectName}"/>
+                    <button type="submit" class="btn-action btn-download">Download</button>
+                </form>
+
+                <!-- Update Name -->
+                <a th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}" class="btn-action btn-update">Rename</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle for Upload -->
+    <button class="toggle-button" onclick="document.getElementById('upload-section').style.display = document.getElementById('upload-section').style.display === 'none' ? 'block' : 'none';">
+        Upload Files
+    </button>
+
+    <!-- Collapsible section for file upload -->
+    <div id="upload-section" class="toggle-section">
+        <h2>Upload Files</h2>
+        <form enctype="multipart/form-data" action="/upload-files" method="POST">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="path" th:value="${childPaths}"/>
+            <label for="files">Select files:</label>
+            <input accept="*" name="files" type="file" id="files" multiple>
+            <button type="submit" class="btn-action btn-update">Upload Files</button>
+        </form>
+    </div>
 </div>
 
-
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a th:href="@{'/?path='}">Home</a></li>
-
-        <li th:each="link, iterStat : ${breadcrumbLinks}" class="breadcrumb-item">
-            <a th:href="@{'/?path=' + ${link}}" th:text="${currentPath[iterStat.index]}"></a>
-        </li>
-    </ol>
-</nav>
-
-<tbody>
-<tr th:each="objectName : ${objects}" th:if="${!objectName.endsWith('.keep')}">
-    <td>
-        <span th:if="${objectName.endsWith('/')}">
-            <a th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
-
-            <a class="nav-link text-white"
-               th:href="@{|/pattern-update-name-folder?objectName=${objectName}&path=${childPaths}|}">
-            update name folder
-        </a>
-        </span>
-
-        <span th:if="${!objectName.endsWith('/')}">
-            <span th:text="${objectName}"></span>
-
-            <form action="/delete-file" method="POST" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="_method" value="DELETE"/>
-                <input type="hidden" name="path" th:value="${childPaths}"/>
-                <input type="hidden" name="objectName" th:value="${objectName}"/>
-                <button type="submit" class="delete-button">
-                    delete file <i class="fa-solid fa-trash"></i>
-                </button>
-            </form>
-
-            <form action="/download-file" method="GET" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="path" th:value="${childPaths}"/>
-                <input type="hidden" name="objectName" th:value="${objectName}"/>
-                <button type="submit" class="download-button">
-                    download file <i class="fa-solid fa-download"></i>
-                </button>
-            </form>
-
-            <a class="nav-link text-white"
-               th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}">
-                update name file
-            </a>
-        </span>
-    </td>
-</tr>
-</tbody>
-
+<script>
+    // Collapsible form toggle
+    function toggleSection(id) {
+        var section = document.getElementById(id);
+        section.style.display = (section.style.display === "none") ? "block" : "none";
+    }
+</script>
 
 </body>
 </html>
