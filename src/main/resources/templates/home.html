@@ -33,7 +33,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Focus on files and folders */
         .file-item {
             padding: 10px;
             display: flex;
@@ -45,17 +44,18 @@
             font-size: 1.1rem;
         }
 
-        .file-item a {
+        /* Стили для ссылок на файлы и папки */
+        .file-item a:not(.btn-action) {
             text-decoration: none;
-            color: #007bff;
             font-weight: 500;
+            color: #007bff; /* Цвет обычных ссылок */
         }
 
-        .file-item a:hover {
+        .file-item a:not(.btn-action):hover {
             text-decoration: underline;
         }
 
-        /* Smaller buttons for actions */
+        /* Стили для кнопок действий */
         .action-buttons {
             display: flex;
             gap: 10px;
@@ -67,11 +67,11 @@
             font-size: 0.9rem;
             border: none;
             cursor: pointer;
+            color: #fff;
         }
 
         .btn-delete {
             background-color: #dc3545;
-            color: #fff;
         }
 
         .btn-delete:hover {
@@ -80,7 +80,6 @@
 
         .btn-download {
             background-color: #28a745;
-            color: #fff;
         }
 
         .btn-download:hover {
@@ -89,11 +88,21 @@
 
         .btn-update {
             background-color: #007bff;
-            color: #fff;
         }
 
         .btn-update:hover {
             background-color: #0056b3;
+        }
+
+        .btn-action a {
+            text-decoration: none;
+            font-weight: normal; /* Убираем жирный шрифт */
+            color: inherit; /* Цвет текста внутри кнопок */
+        }
+
+        .btn-action a:hover {
+            text-decoration: none;
+            color: inherit; /* Убираем подчеркивание и наследуем цвет при наведении */
         }
 
         /* Breadcrumbs */
@@ -243,7 +252,7 @@
                 </form>
 
                 <a th:href="@{|/pattern-update-name-folder?objectName=${objectName}&path=${childPaths}|}"
-                   class="btn-action btn-update">Rename</a>
+                   class="btn-action btn-update">Update</a>
             </div>
 
             <div class="action-buttons" style="margin-left: auto;" th:if="${!objectName.endsWith('/')}">
@@ -263,7 +272,7 @@
                 </form>
 
                 <a th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}"
-                   class="btn-action btn-update">Rename</a>
+                   class="btn-action btn-update">Update</a>
             </div>
         </div>
     </div>
