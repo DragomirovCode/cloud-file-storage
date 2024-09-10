@@ -16,6 +16,7 @@ public class DeleteFolderController {
     @DeleteMapping("/delete-folder")
     public String post(
             @RequestParam(name = "path", required = false) String path,
+            @RequestParam("objectName") String objectName,
             Authentication authentication
     ) {
 
@@ -24,9 +25,7 @@ public class DeleteFolderController {
         String username = authentication.getName();
         String bucketNameHome = "user-" + username;
 
-        deleteFolderService.deleteFolder(bucketNameHome, path);
-
-        path = pathUtil.getPathWithoutLastElement(path);
+        deleteFolderService.deleteFolder(bucketNameHome, objectName);
 
         return "redirect:/?path=" + path;
     }

@@ -30,21 +30,6 @@ public class PathUtil {
                         (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
     }
 
-    public String getPathWithoutLastElement(String path) {
-        Path pathFile = Paths.get(path);
-        Path subPath;
-        String pathBeforeFileName;
-        if (pathFile.getNameCount() > 1) {
-            subPath = pathFile.subpath(0, pathFile.getNameCount() - 1);
-            pathBeforeFileName = subPath.toString();
-            pathBeforeFileName = pathBeforeFileName.replace("\\", "/");
-        } else {
-            subPath = Path.of("");
-            pathBeforeFileName = subPath.toString();
-        }
-        return pathBeforeFileName;
-    }
-
     public String getDownloadsFilePath(String objectName) {
         String homeDir = System.getProperty("user.home");
         String downloadsDir = homeDir + File.separator + "Downloads";
