@@ -203,8 +203,8 @@
 
     <!-- File Search -->
     <form class="file-search" th:action="@{/}" method="get">
-        <input type="text" name="fileName" placeholder="Search for a file by name..." />
-        <input type="hidden" name="path" th:value="${childPaths}" />
+        <input type="text" name="fileName" placeholder="Search for a file by name..."/>
+        <input type="hidden" name="path" th:value="${childPaths}"/>
         <button type="submit">Search</button>
     </form>
 
@@ -227,13 +227,18 @@
     <!-- File/Folder Listing -->
     <div th:each="objectName : ${objects}" th:if="${!objectName.endsWith('.keep')}">
         <div class="file-item">
-            <span>
-                <a th:if="${objectName.endsWith('/')}" th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
-                <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
-            </span>
 
-            <div class="action-buttons">
-                <!-- Delete File -->
+    <span>
+        <a th:if="${objectName.endsWith('/')}" th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
+        <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
+    </span>
+
+            <div class="action-buttons" style="margin-left: auto;" th:if="${objectName.endsWith('/')}">
+                <a th:href="@{|/pattern-update-name-folder?objectName=${objectName}&path=${childPaths}|}"
+                   class="btn-action btn-update">Rename</a>
+            </div>
+
+            <div class="action-buttons" style="margin-left: auto;" th:if="${!objectName.endsWith('/')}">
                 <form action="/delete-file" method="POST" style="display:inline;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" name="_method" value="DELETE"/>
@@ -242,7 +247,6 @@
                     <button type="submit" class="btn-action btn-delete">Delete</button>
                 </form>
 
-                <!-- Download File -->
                 <form action="/download-file" method="GET" style="display:inline;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" name="path" th:value="${childPaths}"/>
@@ -250,13 +254,14 @@
                     <button type="submit" class="btn-action btn-download">Download</button>
                 </form>
 
-                <!-- Update Name -->
-                <a th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}" class="btn-action btn-update">Rename</a>
+                <a th:href="@{|/pattern-update-name-file?objectName=${objectName}&path=${childPaths}|}"
+                   class="btn-action btn-update">Rename</a>
             </div>
         </div>
     </div>
 
-    <button class="toggle-button" onclick="document.getElementById('upload-section').style.display = document.getElementById('upload-section').style.display === 'none' ? 'block' : 'none';">
+    <button class="toggle-button"
+            onclick="document.getElementById('upload-section').style.display = document.getElementById('upload-section').style.display === 'none' ? 'block' : 'none';">
         Upload Files and Folder
     </button>
 
