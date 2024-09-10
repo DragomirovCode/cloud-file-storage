@@ -204,10 +204,28 @@
         input[type="file"] {
             margin-top: 10px;
         }
+
+        .btn-logout {
+            background-color: #dc3545;
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
+
+    <form method="POST" action="/process_logout">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn-action btn-logout">Logout</button>
+        </div>
+    </form>
+
+    </br>
 
     <!-- File Search -->
     <form class="file-search" th:action="@{/}" method="get">
