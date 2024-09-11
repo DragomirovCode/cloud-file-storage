@@ -40,10 +40,6 @@ public class CreateFolderService {
                 throw new DuplicateItemException("A folder with the same name already exists in the specified path");
             }
 
-            if (path.endsWith(folderName)) {
-                throw new DuplicateItemException("The path cannot contain two consecutive identical folder names");
-            }
-
             InputStream keepFileStream = new ByteArrayInputStream(new byte[0]);
             String objectName = path + folderName + "/.keep";
 
