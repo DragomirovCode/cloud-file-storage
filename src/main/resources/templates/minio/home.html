@@ -228,7 +228,7 @@
     </br>
 
     <!-- File Search -->
-    <form class="file-search" th:action="@{/static}" method="get">
+    <form class="file-search" th:action="@{/}" method="get">
         <input type="text" name="fileName" placeholder="Search for a file by name..."/>
         <input type="hidden" name="path" th:value="${childPaths}"/>
         <button type="submit">Search</button>

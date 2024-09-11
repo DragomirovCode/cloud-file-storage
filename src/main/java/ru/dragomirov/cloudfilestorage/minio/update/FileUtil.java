@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.update;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

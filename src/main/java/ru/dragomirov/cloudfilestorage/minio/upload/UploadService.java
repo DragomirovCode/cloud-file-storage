@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.dragomirov.cloudfilestorage.minio.FileUtil;
+import ru.dragomirov.cloudfilestorage.minio.update.FileUtil;
 import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
 import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;

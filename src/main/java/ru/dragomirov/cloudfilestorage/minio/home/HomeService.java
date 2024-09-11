@@ -57,6 +57,7 @@ public class HomeService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Item> getObjectByName(String bucketName, String path, String fileName) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()

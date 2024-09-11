@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.home;
 
 import java.util.ArrayList;
 import java.util.Arrays;

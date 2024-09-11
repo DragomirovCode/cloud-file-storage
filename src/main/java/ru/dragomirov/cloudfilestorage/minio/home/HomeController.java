@@ -11,8 +11,8 @@ import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 import java.util.List;
 
-import static ru.dragomirov.cloudfilestorage.minio.BreadcrumbsUtil.getBreadcrumbLinksForPath;
-import static ru.dragomirov.cloudfilestorage.minio.BreadcrumbsUtil.getFolderNamesForPath;
+import static ru.dragomirov.cloudfilestorage.minio.home.BreadcrumbsUtil.getBreadcrumbLinksForPath;
+import static ru.dragomirov.cloudfilestorage.minio.home.BreadcrumbsUtil.getFolderNamesForPath;
 
 @Controller
 @RequiredArgsConstructor
