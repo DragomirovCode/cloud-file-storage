@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Breadcrumbs {
+public class BreadcrumbsUtil {
 
     public static List<String> getBreadcrumbLinksForPath(String path) {
         if (path.isEmpty()) {
