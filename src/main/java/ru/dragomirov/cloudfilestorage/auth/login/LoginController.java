@@ -8,7 +8,9 @@ import ru.dragomirov.cloudfilestorage.auth.User;
 @Controller
 public class LoginController {
     @GetMapping("/login")
-    public String doGet(@ModelAttribute("user") User user){
+    public String get(
+            @ModelAttribute("user") User user
+    ) {
         return "auth/login";
     }
 }

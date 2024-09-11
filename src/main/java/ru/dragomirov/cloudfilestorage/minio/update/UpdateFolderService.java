@@ -25,7 +25,7 @@ public class UpdateFolderService {
 
     @Transactional
     public void updateNameFolder(String bucketName, String oldFolderName, String newFolderName, String pathFile) {
-        List<String> objectNames = listObjects(bucketName, pathFile).stream()
+        List<String> objectNames = getListObjects(bucketName, pathFile).stream()
                 .map(Item::objectName)
                 .collect(Collectors.toList());
 
@@ -117,7 +117,7 @@ public class UpdateFolderService {
         }
     }
 
-    private List<Item> listObjects(String bucketName, String path) {
+    private List<Item> getListObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

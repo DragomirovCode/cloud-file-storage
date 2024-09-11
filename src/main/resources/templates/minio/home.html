@@ -228,7 +228,7 @@
     </br>
 
     <!-- File Search -->
-    <form class="file-search" th:action="@{/}" method="get">
+    <form class="file-search" th:action="@{/static}" method="get">
         <input type="text" name="fileName" placeholder="Search for a file by name..."/>
         <input type="hidden" name="path" th:value="${childPaths}"/>
         <button type="submit">Search</button>
@@ -255,7 +255,7 @@
         <div class="file-item">
 
     <span>
-        <a th:if="${objectName.endsWith('/')}" th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
+        <a th:if="${objectName.endsWith('/')}" th:href="@{|/static?path=${objectName}|}" th:text="${objectName}"></a>
         <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
     </span>
 

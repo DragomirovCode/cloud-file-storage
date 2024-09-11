@@ -26,7 +26,7 @@ public class CreateFolderController {
     ) {
         model.addAttribute("childPaths", path);
         model.addAttribute("minioDto", new CreateFolderDto());
-        return "create-folder";
+        return "minio/create-folder";
     }
 
     @PostMapping("/create-new-folder")
@@ -37,7 +37,7 @@ public class CreateFolderController {
             Authentication authentication
     ) {
         if (bindingResult.hasErrors()) {
-            return "create-folder";
+            return "minio/create-folder";
         }
 
         path = pathUtil.clearPath(path);

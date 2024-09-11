@@ -13,7 +13,7 @@ import org.testcontainers.containers.GenericContainer;
 import ru.dragomirov.cloudfilestorage.minio.create.CreateFolderService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFileService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFolderService;
-import ru.dragomirov.cloudfilestorage.minio.home.GetListObjectService;
+import ru.dragomirov.cloudfilestorage.minio.home.HomeService;
 import ru.dragomirov.cloudfilestorage.minio.update.UpdateFileService;
 import ru.dragomirov.cloudfilestorage.minio.update.UpdateFolderService;
 import ru.dragomirov.cloudfilestorage.minio.upload.UploadService;
@@ -33,7 +33,7 @@ public class MinioCrudIntegrationTest {
     UploadService uploadService;
 
     @Autowired
-    GetListObjectService getListObjectService;
+    HomeService homeService;
 
     @Autowired
     UpdateFileService updateFileService;
@@ -73,7 +73,7 @@ public class MinioCrudIntegrationTest {
     @Order(1)
     @DisplayName("process upload should add file in minio")
     void uploadMultipleFiles_shouldAddFile_inMinio() {
-        getListObjectService.createUserBucket("user-test");
+        homeService.createUserBucket("user-test");
 
         String directory = "C:\\Users\\Твой дом\\OneDrive\\Рабочий стол\\test.png";
         File file = new File(directory);
@@ -90,7 +90,7 @@ public class MinioCrudIntegrationTest {
 
             uploadService.uploadMultipleFiles(files, "", "user-test");
 
-            List<String> objectNames = getListObjectService.listObjects("user-test", "").stream()
+            List<String> objectNames = homeService.getListObjects("user-test", "").stream()
                     .map(Item::objectName)
                     .toList();
 
@@ -106,7 +106,7 @@ public class MinioCrudIntegrationTest {
     void updateFile_shouldUpdateFileName_inMinio() {
         updateFileService.updateFile("user-test", "test.png", "new-test.png", "");
 
-        List<String> objectNames = getListObjectService.listObjects("user-test", "").stream()
+        List<String> objectNames = homeService.getListObjects("user-test", "").stream()
                 .map(Item::objectName)
                 .toList();
 
@@ -123,7 +123,7 @@ public class MinioCrudIntegrationTest {
 
         updateFolderService.updateNameFolder("user-test", "folder", "new-folder", "");
 
-        List<String> objectNames = getListObjectService.listObjects("user-test", "").stream()
+        List<String> objectNames = homeService.getListObjects("user-test", "").stream()
                 .map(Item::objectName)
                 .toList();
 
@@ -138,7 +138,7 @@ public class MinioCrudIntegrationTest {
     void deleteFile_shouldDeleteFile_inMinio() {
         deleteFileService.deleteFile("user-test", "new-test.png");
 
-        List<String> objectNames = getListObjectService.listObjects("user-test", "").stream()
+        List<String> objectNames = homeService.getListObjects("user-test", "").stream()
                 .map(Item::objectName)
                 .toList();
 
@@ -154,7 +154,7 @@ public class MinioCrudIntegrationTest {
     void deleteFolder_shouldDeleteFolder_inMinio() {
         deleteFolderService.deleteFolder("user-test", "new-folder/");
 
-        List<String> objectNames = getListObjectService.listObjects("user-test", "").stream()
+        List<String> objectNames = homeService.getListObjects("user-test", "").stream()
                 .map(Item::objectName)
                 .toList();
 

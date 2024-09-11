@@ -27,7 +27,7 @@ public class UpdateFolderNameController {
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
         model.addAttribute("updateFolderDto", new UpdateFolderDto());
-        return "update-folder";
+        return "minio/update-folder";
     }
 
     @PostMapping("/update-name-folder")
@@ -48,7 +48,7 @@ public class UpdateFolderNameController {
             model.addAttribute("bucketName", bucketNameHome);
             model.addAttribute("objectName", objectName);
             model.addAttribute("childPaths", path);
-            return "update-folder";
+            return "minio/update-folder";
         }
 
         path = pathUtil.clearPath(path);

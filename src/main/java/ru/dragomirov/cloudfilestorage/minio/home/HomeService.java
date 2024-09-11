@@ -16,11 +16,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GetListObjectService {
+public class HomeService {
     private final MinioClient minioClient;
 
     @Transactional(readOnly = true)
-    public List<Item> listObjects(String bucketName, String path) {
+    public List<Item> getListObjects(String bucketName, String path) {
         createUserBucket(bucketName);
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
@@ -55,5 +55,29 @@ public class GetListObjectService {
                  XmlParserException e) {
             throw new MinioOperationException();
         }
+    }
+
+    public List<Item> getObjectByName(String bucketName, String path, String fileName) {
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(path)
+                        .build()
+        );
+
+        List<Item> matchingItems = new ArrayList<>();
+        for (Result<Item> result : results) {
+            try {
+                Item item = result.get();
+                if (item.objectName().equals(fileName)) {
+                    matchingItems.add(item);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new MinioOperationException();
+            }
+        }
+
+        return matchingItems;
     }
 }

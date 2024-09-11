@@ -17,12 +17,11 @@ import static ru.dragomirov.cloudfilestorage.minio.BreadcrumbsUtil.getFolderName
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-    private final GetListObjectService getListObjectService;
-    private final GetFileByNameService getFileByNameService;
+    private final HomeService homeService;
     private final PathUtil pathUtil;
 
     @GetMapping("/")
-    public String getListObjects(
+    public String get(
             @RequestParam(name = "path", required = false) String path,
             Model model,
             Authentication authentication,
@@ -37,16 +36,14 @@ public class HomeController {
         List<String> objectNames;
 
         if (fileName != null && !fileName.isEmpty()) {
-            objectNames = getFileByNameService.getObjectByName(bucketNameHome, path, fileName).stream()
+            objectNames = homeService.getObjectByName(bucketNameHome, path, fileName).stream()
                     .map(Item::objectName)
                     .toList();
         } else {
-            objectNames = getListObjectService.listObjects(bucketNameHome, path).stream()
+            objectNames = homeService.getListObjects(bucketNameHome, path).stream()
                     .map(Item::objectName)
                     .toList();
         }
-
-        System.out.println("objectNames: " + objectNames);;
 
         List<String> folderNames = getFolderNamesForPath(path.trim());
 
@@ -60,6 +57,6 @@ public class HomeController {
         model.addAttribute("currentPath", getFolderNamesForPath(path));
         model.addAttribute("childPaths", childPaths);
 
-        return "home";
+        return "minio/home";
     }
 }

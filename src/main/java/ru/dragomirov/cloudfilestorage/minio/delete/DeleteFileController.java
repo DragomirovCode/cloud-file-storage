@@ -14,7 +14,7 @@ public class DeleteFileController {
     private final PathUtil pathUtil;
 
     @DeleteMapping("/delete-file")
-    public String deleteFile(
+    public String delete(
             @RequestParam(name = "path", required = false) String path,
             @RequestParam("objectName") String objectName,
             Authentication authentication

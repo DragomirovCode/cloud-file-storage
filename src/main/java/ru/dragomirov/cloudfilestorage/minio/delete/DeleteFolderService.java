@@ -25,13 +25,13 @@ public class DeleteFolderService {
 
     @Transactional
     public void deleteFolder(String bucketName, String folderPrefix) {
-        List<String> objectsToDelete = listObjectsInFolder(bucketName, folderPrefix);
+        List<String> objectsToDelete = getListObjectsInFolder(bucketName, folderPrefix);
         if (!objectsToDelete.isEmpty()) {
             deleteObjects(bucketName, objectsToDelete);
         }
     }
 
-    private List<String> listObjectsInFolder(String bucketName, String folderPrefix) {
+    private List<String> getListObjectsInFolder(String bucketName, String folderPrefix) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

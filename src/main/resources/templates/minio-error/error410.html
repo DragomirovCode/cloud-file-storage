@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>error</title>
+    <title>Error</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,8 +51,8 @@
 <body>
 <div class="error-container">
     <h1 class="error-title">Error</h1>
-    <p class="error-message" th:text="${errorMessage}"></p>
-    <a href="/?bucketName=home" class="back-button">back to home</a>
+    <p class="error-message" th:text="'This feature is temporarily unavailable'"></p>
+    <a href="/static?bucketName=home" class="back-button">back to home</a>
 </div>
 </body>
 </html>

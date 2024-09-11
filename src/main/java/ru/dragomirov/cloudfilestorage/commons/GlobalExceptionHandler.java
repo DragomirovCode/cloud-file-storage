@@ -13,23 +13,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateItemException.class)
     public String handleDuplicateParameterException(DuplicateItemException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
-        return "error500";
+        return "minio/error500";
     }
 
     @ExceptionHandler(InvalidParameterException.class)
     public String handleInvalidParameterException(InvalidParameterException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
-        return "error500";
+        return "minio/error500";
     }
 
     @ExceptionHandler(MinioOperationException.class)
     public String handleMinioOperationParameterException(MinioOperationException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
-        return "error410";
+        return "minio/error410";
     }
 
     @ExceptionHandler(DuplicateUserException.class)
     public String handleDuplicateUserParameterException() {
-        return "error409";
+        return "auth-error/error409";
     }
 }

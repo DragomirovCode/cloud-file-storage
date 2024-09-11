@@ -54,7 +54,7 @@ public class UploadService {
     }
 
     private boolean keepFileExists(String bucketName, String folderPath) {
-        List<Item> objectsInPath = listObjects(bucketName, folderPath);
+        List<Item> objectsInPath = getListObjects(bucketName, folderPath);
 
         for (Item item : objectsInPath) {
             if (item.objectName().equals(folderPath + ".keep")) {
@@ -102,7 +102,7 @@ public class UploadService {
         }
     }
 
-    private List<Item> listObjects(String bucketName, String path) {
+    private List<Item> getListObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
@@ -131,7 +131,7 @@ public class UploadService {
     public void uploadMultipleFiles(MultipartFile[] files, String path, String bucketName) {
         try {
 
-            List<String> objectNames = listObjects(bucketName, path).stream()
+            List<String> objectNames = getListObjects(bucketName, path).stream()
                     .map(Item::objectName)
                     .collect(Collectors.toList());
 

@@ -26,7 +26,7 @@ public class UpdateFileService {
     public void updateFile(String bucketName, String oldObjectName, String newObjectName, String path) {
         List<String> objectNames;
         try {
-            objectNames = listObjects(bucketName, path).stream()
+            objectNames = getListObjects(bucketName, path).stream()
                     .map(Item::objectName)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class UpdateFileService {
         }
     }
 
-    private List<Item> listObjects(String bucketName, String path) {
+    private List<Item> getListObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

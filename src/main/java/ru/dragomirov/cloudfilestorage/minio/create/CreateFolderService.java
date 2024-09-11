@@ -30,7 +30,7 @@ public class CreateFolderService {
     @Transactional
     public void createFolder(String bucketName, String folderName, String path) {
         try {
-            List<String> objectNames = listObjects(bucketName, path).stream()
+            List<String> objectNames = getListObjects(bucketName, path).stream()
                     .map(Item::objectName)
                     .collect(Collectors.toList());
 
@@ -62,7 +62,7 @@ public class CreateFolderService {
         }
     }
 
-    private List<Item> listObjects(String bucketName, String path) {
+    private List<Item> getListObjects(String bucketName, String path) {
         Iterable<Result<Item>> results = minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

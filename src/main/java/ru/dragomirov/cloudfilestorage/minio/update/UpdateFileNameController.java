@@ -29,7 +29,7 @@ public class UpdateFileNameController {
         model.addAttribute("objectName", objectName);
         model.addAttribute("childPaths", path);
         model.addAttribute("updateFileDto", new UpdateFileDto());
-        return "update-file";
+        return "minio/update-file";
     }
 
     @PostMapping("/update-name-file")
@@ -49,7 +49,7 @@ public class UpdateFileNameController {
             model.addAttribute("bucketName", bucketNameHome);
             model.addAttribute("objectName", oldObjectName);
             model.addAttribute("childPaths", path);
-            return "update-file";
+            return "minio/update-file";
         }
 
         path = pathUtil.clearPath(path);

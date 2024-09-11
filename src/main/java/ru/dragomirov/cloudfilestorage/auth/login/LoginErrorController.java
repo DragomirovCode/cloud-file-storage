@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginErrorController {
     @GetMapping("/error401")
-    public String handleError() {
-        return "error401";
+    public String get() {
+        return "auth-error/error401";
     }
 }
-
