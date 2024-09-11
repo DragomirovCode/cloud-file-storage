@@ -1,9 +1,6 @@
 package ru.dragomirov.cloudfilestorage.minio.update;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -11,8 +8,9 @@ public class UpdateFileDto {
 
     @NotNull(message = "The file name should not be null")
     @NotEmpty(message = "The file name should not be empty")
+    @NotBlank(message = "The file name cannot be blank")
     @Size(min = 3, max = 63, message = "The file name must be between 3 and 63 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "The file name must contain only English letters, digits, and hyphens")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9-_ ]*$", message = "The file name must start with a letter and contain only English letters, digits, hyphens, underscores, and spaces")
     public String file;
 
 }
