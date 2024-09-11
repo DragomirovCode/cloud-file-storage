@@ -5,10 +5,11 @@ services:
     image: minio/minio
     container_name: minio
     ports:
-      - "9000:9000"    # Port for accessing the Mini API
-      - "9001:9001"    # Port for the MinIO web console
-    env_file:
-      - s3-login.env
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
