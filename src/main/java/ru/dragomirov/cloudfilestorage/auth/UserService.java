@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dragomirov.cloudfilestorage.auth.login.UserNotFoundException;
+import ru.dragomirov.cloudfilestorage.auth.registration.DuplicateUserException;
 
 import java.util.List;
 import java.util.Optional;

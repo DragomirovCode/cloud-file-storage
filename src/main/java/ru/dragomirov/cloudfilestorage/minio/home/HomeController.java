@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.minio;
+package ru.dragomirov.cloudfilestorage.minio.home;
 
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.dragomirov.cloudfilestorage.minio.get.GetFileByNameService;
-import ru.dragomirov.cloudfilestorage.minio.get.GetListObjectService;
+import ru.dragomirov.cloudfilestorage.minio.PathUtil;
 
 import java.util.List;
 

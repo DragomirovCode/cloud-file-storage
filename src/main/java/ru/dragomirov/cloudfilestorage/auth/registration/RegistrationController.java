@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.auth;
+package ru.dragomirov.cloudfilestorage.auth.registration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
+import ru.dragomirov.cloudfilestorage.auth.User;
+import ru.dragomirov.cloudfilestorage.auth.UserDto;
+import ru.dragomirov.cloudfilestorage.auth.UserMapper;
+import ru.dragomirov.cloudfilestorage.auth.UserService;
 
 @Controller
 @RequestMapping("/registration")

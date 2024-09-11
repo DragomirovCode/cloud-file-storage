@@ -13,7 +13,7 @@ import org.testcontainers.containers.GenericContainer;
 import ru.dragomirov.cloudfilestorage.minio.create.CreateFolderService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFileService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFolderService;
-import ru.dragomirov.cloudfilestorage.minio.get.GetListObjectService;
+import ru.dragomirov.cloudfilestorage.minio.home.GetListObjectService;
 import ru.dragomirov.cloudfilestorage.minio.update.UpdateFileService;
 import ru.dragomirov.cloudfilestorage.minio.update.UpdateFolderService;
 import ru.dragomirov.cloudfilestorage.minio.upload.UploadService;

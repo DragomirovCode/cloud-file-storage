@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.auth;
+package ru.dragomirov.cloudfilestorage.auth.login;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

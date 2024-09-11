@@ -1,4 +1,4 @@
-package ru.dragomirov.cloudfilestorage.commons.config;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import ru.dragomirov.cloudfilestorage.auth.CustomAuthenticationFailureHandler;
-import ru.dragomirov.cloudfilestorage.auth.CustomAuthenticationSuccessHandler;
+import ru.dragomirov.cloudfilestorage.auth.login.CustomAuthenticationFailureHandler;
+import ru.dragomirov.cloudfilestorage.auth.login.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity

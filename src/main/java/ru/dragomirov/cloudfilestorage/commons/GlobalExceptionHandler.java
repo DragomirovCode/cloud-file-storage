@@ -1,9 +1,12 @@
-package ru.dragomirov.cloudfilestorage.minio.exception;
+package ru.dragomirov.cloudfilestorage.commons;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.dragomirov.cloudfilestorage.auth.DuplicateUserException;
+import ru.dragomirov.cloudfilestorage.auth.registration.DuplicateUserException;
+import ru.dragomirov.cloudfilestorage.minio.exception.DuplicateItemException;
+import ru.dragomirov.cloudfilestorage.minio.exception.InvalidParameterException;
+import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
