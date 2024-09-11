@@ -255,7 +255,7 @@
         <div class="file-item">
 
     <span>
-        <a th:if="${objectName.endsWith('/')}" th:href="@{|/static?path=${objectName}|}" th:text="${objectName}"></a>
+        <a th:if="${objectName.endsWith('/')}" th:href="@{|/?path=${objectName}|}" th:text="${objectName}"></a>
         <span th:if="${!objectName.endsWith('/')}" th:text="${objectName}"></span>
     </span>
 
