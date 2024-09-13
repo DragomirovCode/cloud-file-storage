@@ -3,38 +3,80 @@ version: '3.8'
 services:
   redis:
     image: redis:latest
-    container_name: my-redis
+    container_name: redis
     ports:
-      - "6379:6379"
+      - "6379:6379" # Внешний порт 6380, внутренний Redis 6379
     volumes:
       - redis_data:/data
+    healthcheck: # Проверка здоровья Redis
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - webapp
 
   db:
-    image: postgres:15
-    container_name: postgres-db
+    image: mysql:8.0
+    container_name: mysql-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cloud-file-storage
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: my_mysql_username
+      MYSQL_PASSWORD: my_mysql_password
+      MYSQL_DATABASE: database
     ports:
-      - "5435:5432"
+    - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+    - mysql_data:/var/lib/mysql
+
+
 
   minio:
     image: minio/minio
     container_name: minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9000:9000" # MinIO сервер
+      - "9001:9001" # MinIO консоль
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
+    networks:
+      - webapp
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cloud-file-storage-app
+    depends_on:
+      redis:
+        condition: service_healthy # Ждем, пока Redis будет "здоров"
+      db:
+        condition: service_healthy # Ждем, пока PostgreSQL будет "здоров"
+      minio:
+        condition: service_healthy # Ждем, пока Minio будет "здоров"
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/database
+      SPRING_DATASOURCE_USERNAME: my_mysql_username
+      SPRING_DATASOURCE_PASSWORD: my_mysql_password
+      MINIO_URL: http://minio:9000
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    networks:
+      - webapp
+
+networks:
+  webapp:
+    driver: bridge
 
 volumes:
   redis_data:
-  postgres_data:
+  mysql_data:
   minio_data:
