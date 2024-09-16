@@ -6,6 +6,7 @@ import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFileService;
 import ru.dragomirov.cloudfilestorage.minio.exception.MinioOperationException;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeService {
     private final MinioClient minioClient;
+    private static final System.Logger logger = System.getLogger(DeleteFileService.class.getName());
 
     @Transactional(readOnly = true)
     public List<Item> getListObjects(String bucketName, String path) {
@@ -37,6 +39,7 @@ public class HomeService {
             } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                      InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
+                logger.log(System.Logger.Level.ERROR, e);
                 throw new RuntimeException(e);
             }
         }
@@ -53,6 +56,7 @@ public class HomeService {
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
+            logger.log(System.Logger.Level.ERROR, e);
             throw new MinioOperationException();
         }
     }
@@ -75,6 +79,7 @@ public class HomeService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.log(System.Logger.Level.ERROR, e);
                 throw new MinioOperationException();
             }
         }

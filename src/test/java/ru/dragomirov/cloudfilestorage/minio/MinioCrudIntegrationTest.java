@@ -10,6 +10,9 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.multipart.MultipartFile;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.dragomirov.cloudfilestorage.minio.create.CreateFolderService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFileService;
 import ru.dragomirov.cloudfilestorage.minio.delete.DeleteFolderService;
@@ -26,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MinioCrudIntegrationTest {
 
@@ -50,18 +54,29 @@ public class MinioCrudIntegrationTest {
     @Autowired
     DeleteFolderService deleteFolderService;
 
-    static GenericContainer<?> minioContainer = new GenericContainer<>("minio/minio")
-            .withEnv("MINIO_ACCESS_KEY", "minioadmin")
-            .withEnv("MINIO_SECRET_KEY", "minioadmin")
+    @Container
+    static final GenericContainer<?> minioContainer = new GenericContainer<>("minio/minio")
             .withCommand("server /data")
+            .withEnv("MINIO_ROOT_USER", "minioadmin")
+            .withEnv("MINIO_ROOT_PASSWORD", "minioadmin")
             .withExposedPorts(9000);
 
+    @Container
+    static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0")
+            .withDatabaseName("database")
+            .withUsername("my_mysql_username")
+            .withPassword("my_mysql_password");
+
     static {
+        mySQLContainer.start();
         minioContainer.start();
     }
 
     @DynamicPropertySource
     static void minioProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
         registry.add("minio.url", () -> "http://" +
                 minioContainer.getHost() + ":" + minioContainer.getMappedPort(9000));
         registry.add("minio.access.key", () -> "minioadmin");
