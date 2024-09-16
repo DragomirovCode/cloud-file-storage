@@ -1,9 +1,9 @@
-version: '3'
+version: '3.8'
 
 services:
   redis:
     image: redis:7.4.0
-    container_name: redis
+    container_name: my-redis
     restart: always
     ports:
       - "6379:6379"
@@ -18,8 +18,8 @@ services:
       retries: 5
 
   db:
-    image: mysql:8.4.0-oraclelinux8
-    container_name: mysql
+    image: mysql:8.0
+    container_name: my-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
@@ -40,7 +40,7 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2024-08-29T01-40-52Z-cpuv1
-    container_name: minio
+    container_name: my-minio
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -72,11 +72,13 @@ services:
       minio:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/database
+      SPRING_DATASOURCE_URL: jdbc:mysql://my-mysql:3306/database
       SPRING_DATASOURCE_USERNAME: my_mysql_username
       SPRING_DATASOURCE_PASSWORD: my_mysql_password
-      SPRING_DATA_REDIS_URL: redis://redis:6379
-      MINIO_ENDPOINT: http://minio:9000
+      SPRING_DATA_REDIS_URL: redis://my-redis:6379
+      SPRING_DATA_REDIS_HOST: my-redis
+      SPRING_DATA_REDIS_PORT: 6379
+      MINIO_ENDPOINT: http://172.18.0.4:9000
     ports:
       - "8080:8080"
     networks:
@@ -93,3 +95,4 @@ volumes:
 networks:
   webapp:
     driver: bridge
+    name: webapp
