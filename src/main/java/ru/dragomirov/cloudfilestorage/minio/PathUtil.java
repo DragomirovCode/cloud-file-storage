@@ -2,7 +2,6 @@ package ru.dragomirov.cloudfilestorage.minio;
 
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -28,18 +27,6 @@ public class PathUtil {
         return folderNames.isEmpty() ||
                 (folderNames.size() == 1 &&
                         (folderNames.get(0).trim().isEmpty() || folderNames.get(0).equals("/")));
-    }
-
-    public String getDownloadsFilePath(String objectName) {
-        String homeDir = System.getProperty("user.home");
-        String downloadsDir = homeDir + File.separator + "Downloads";
-
-        Path pathFile = Paths.get(objectName);
-        String endFileName = pathFile.getFileName().toString();
-
-        endFileName = endFileName.replace("\\", "/");
-
-        return downloadsDir + File.separator + endFileName;
     }
 
     public String getParentPathSafe(String objectName) {
